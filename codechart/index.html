@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeChart by Nurse2Web3 | Clinical Code Blue Support Tool for Nurses</title>
+    <meta name="description" content="CodeChart is a fast-access clinical support tool for nurses during Code Blue events. ACLS pathways, medication dosing, cardiac arrest checklists, and post-resuscitation care. $24.99 one-time purchase.">
+    <meta name="keywords" content="Code Blue, ACLS, nursing tool, cardiac arrest, rapid response, clinical support, nurse app, emergency nursing, ICU nurse, ER nurse">
+    <meta name="author" content="Nurse2Web3">
+    <meta property="og:title" content="CodeChart by Nurse2Web3 | Clinical Code Blue Support Tool">
+    <meta property="og:description" content="Fast-access clinical support during Code Blue events. ACLS pathways, medication dosing, cardiac arrest checklists. Built by an ER nurse, for nurses. $24.99 one-time.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://code-chart.replit.app">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CodeChart by Nurse2Web3">
+    <meta name="twitter:description" content="Fast-access clinical support during Code Blue events. Built by an ER nurse, for nurses.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0a1628;
+            --navy-light: #111d33;
+            --navy-mid: #162342;
+            --teal: #1a9e96;
+            --teal-dark: #14786f;
+            --teal-glow: #22c9b8;
+            --red: #dc3545;
+            --red-dark: #a71d2a;
+            --red-accent: #ff3b4e;
+            --gold: #d4a843;
+            --gold-light: #f0c85a;
+            --white: #f0f2f5;
+            --gray: #8e99a9;
+            --gray-light: #c5cdd8;
+            --bg-card: rgba(22, 35, 66, 0.6);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--navy);
+            color: var(--white);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-label {
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--teal);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.25;
+        }
+
+        .section-subtitle {
+            font-size: 1.05rem;
+            color: var(--gray-light);
+            max-width: 640px;
+            margin-bottom: 48px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-center .section-subtitle {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .highlight {
+            color: var(--gold);
+        }
+
+        .highlight-teal {
+            color: var(--teal-glow);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 36px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--red), var(--red-dark));
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(220, 53, 69, 0.35);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 28px rgba(220, 53, 69, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--teal);
+        }
+
+        .btn-outline:hover {
+            background: var(--teal);
+            color: var(--navy);
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            transition: background 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(10, 22, 40, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--red-accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--gray-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+        }
+
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(26, 158, 150, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(220, 53, 69, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Floating medical icons */
+        .hero-medical-icons {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .hero-medical-icons svg {
+            position: absolute;
+        }
+
+        .hero-medical-icons .icon-heartbeat {
+            top: 18%;
+            left: 3%;
+            width: 300px;
+            height: 100px;
+            opacity: 0.35;
+            animation: float-slow 8s ease-in-out infinite;
+        }
+
+        .hero-medical-icons .icon-cross {
+            top: 15%;
+            right: 6%;
+            width: 100px;
+            height: 100px;
+            opacity: 0.3;
+            animation: float-slow 10s ease-in-out infinite reverse;
+        }
+
+        .hero-medical-icons .icon-heart {
+            bottom: 22%;
+            left: 6%;
+            width: 80px;
+            height: 80px;
+            opacity: 0.3;
+            animation: float-slow 9s ease-in-out infinite 1s;
+        }
+
+        .hero-medical-icons .icon-pulse-right {
+            bottom: 15%;
+            right: 3%;
+            width: 280px;
+            height: 90px;
+            opacity: 0.3;
+            animation: float-slow 7s ease-in-out infinite 2s;
+        }
+
+        .hero-medical-icons .icon-stethoscope {
+            top: 50%;
+            right: 10%;
+            width: 100px;
+            height: 100px;
+            opacity: 0.25;
+            animation: float-slow 11s ease-in-out infinite 0.5s;
+        }
+
+        .hero-medical-icons .icon-pill {
+            top: 55%;
+            left: 7%;
+            width: 70px;
+            height: 70px;
+            opacity: 0.25;
+            animation: float-slow 9s ease-in-out infinite 3s;
+        }
+
+        @keyframes float-slow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        @media (max-width: 768px) {
+            .hero-medical-icons .icon-heartbeat,
+            .hero-medical-icons .icon-pulse-right {
+                width: 120px;
+            }
+            .hero-medical-icons .icon-cross,
+            .hero-medical-icons .icon-stethoscope,
+            .hero-medical-icons .icon-pill {
+                display: none;
+            }
+        }
+
+        .hero-content {
+            max-width: 680px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(26, 158, 150, 0.15);
+            border: 1px solid rgba(26, 158, 150, 0.3);
+            color: var(--teal-glow);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.4rem, 5.5vw, 3.6rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 24px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--gray-light);
+            margin-bottom: 36px;
+            max-width: 540px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+            justify-content: center;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gold);
+        }
+
+        .hero-stat-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-scope-statement {
+            font-size: 0.95rem;
+            color: var(--gray-light);
+            line-height: 1.7;
+            max-width: 580px;
+            margin: 0 auto 36px auto;
+            text-align: center;
+            padding: 0 16px;
+            font-style: italic;
+        }
+
+        .hero-scope-highlight {
+            color: var(--gold);
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        .disclaimer-banner {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.12), rgba(212, 168, 67, 0.08));
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin: 0 auto;
+            max-width: 1140px;
+        }
+
+        .disclaimer-banner-inner {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .disclaimer-icon {
+            font-size: 1.6rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .disclaimer-banner h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .disclaimer-banner p {
+            font-size: 0.9rem;
+            color: var(--gray-light);
+            line-height: 1.6;
+        }
+
+        .disclaimer-section {
+            background: var(--navy-light);
+            padding: 40px 0;
+        }
+
+        .problem {
+            background: var(--navy-light);
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .problem-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .problem-list li {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .problem-icon {
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .problem-list li p {
+            color: var(--gray-light);
+            font-size: 0.95rem;
+        }
+
+        .problem-list li strong {
+            color: var(--white);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .problem-visual {
+            background: var(--bg-card);
+            border: 1px solid rgba(26, 158, 150, 0.15);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .problem-visual .big-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .problem-visual h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: var(--red-accent);
+        }
+
+        .problem-visual p {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(26, 158, 150, 0.1);
+            border-radius: 14px;
+            padding: 32px 28px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(26, 158, 150, 0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.2rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .audience {
+            background: var(--navy-light);
+        }
+
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .audience-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--bg-card);
+            border: 1px solid rgba(26, 158, 150, 0.1);
+            border-radius: 10px;
+            padding: 20px 24px;
+            transition: border-color 0.2s;
+        }
+
+        .audience-item:hover {
+            border-color: var(--teal);
+        }
+
+        .audience-check {
+            color: var(--teal-glow);
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .audience-item span {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            counter-reset: step;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin: 0 auto 16px;
+            color: var(--navy);
+        }
+
+        .step h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .step p {
+            color: var(--gray);
+            font-size: 0.85rem;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 28px;
+            right: -12px;
+            width: calc(100% - 56px);
+            height: 2px;
+            background: linear-gradient(90deg, var(--teal), transparent);
+            transform: translateX(50%);
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .about {
+            background: var(--navy-light);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .about-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(212, 168, 67, 0.15);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .about-card .creator-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+        }
+
+        .about-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .about-card .credentials {
+            color: var(--gold);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .about-card .brand {
+            color: var(--teal-glow);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .about-text h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .about-text p {
+            color: var(--gray-light);
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        .about-text .tagline {
+            font-style: italic;
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .social-proof {
+            text-align: center;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 8px;
+        }
+
+        .testimonial-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(26, 158, 150, 0.1);
+            border-radius: 14px;
+            padding: 28px;
+            text-align: left;
+        }
+
+        .testimonial-stars {
+            color: var(--gold);
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .testimonial-card p {
+            color: var(--gray-light);
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--white);
+        }
+
+        .testimonial-role {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .pricing {
+            background: var(--navy-light);
+        }
+
+        .pricing-card {
+            max-width: 480px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 48px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--red), var(--gold), var(--teal));
+        }
+
+        .pricing-badge {
+            display: inline-block;
+            background: rgba(212, 168, 67, 0.15);
+            border: 1px solid rgba(212, 168, 67, 0.3);
+            color: var(--gold);
+            padding: 4px 14px;
+            border-radius: 16px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .pricing-amount {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--white);
+            margin-bottom: 4px;
+        }
+
+        .pricing-amount sup {
+            font-size: 1.5rem;
+            vertical-align: super;
+        }
+
+        .pricing-period {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 28px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 32px;
+        }
+
+        .pricing-features li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--gray-light);
+        }
+
+        .pricing-features li::before {
+            content: '\2713';
+            color: var(--teal-glow);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .pricing-cta {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.1rem;
+        }
+
+        .faq-list {
+            max-width: 740px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid rgba(142, 153, 169, 0.15);
+        }
+
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 20px 0;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: inherit;
+        }
+
+        .faq-question:hover {
+            color: var(--teal-glow);
+        }
+
+        .faq-question .arrow {
+            transition: transform 0.3s;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .faq-item.open .faq-question .arrow {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+
+        .faq-answer-inner {
+            padding: 0 0 20px;
+            color: var(--gray-light);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+        }
+
+        .hipaa-section {
+            background: var(--navy-light);
+        }
+
+        .hipaa-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(26, 158, 150, 0.06);
+            border: 2px solid rgba(26, 158, 150, 0.25);
+            border-radius: 14px;
+            padding: 36px 40px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .hipaa-icon {
+            font-size: 2.4rem;
+            flex-shrink: 0;
+        }
+
+        .hipaa-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--teal-glow);
+            margin-bottom: 8px;
+        }
+
+        .hipaa-card p {
+            color: var(--gray-light);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .full-disclaimer {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(220, 53, 69, 0.06);
+            border: 2px solid rgba(220, 53, 69, 0.25);
+            border-radius: 14px;
+            padding: 36px 40px;
+        }
+
+        .full-disclaimer h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--red-accent);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .full-disclaimer p {
+            color: var(--gray-light);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .final-cta {
+            background: linear-gradient(135deg, var(--navy-mid), var(--navy));
+            text-align: center;
+            padding: 80px 0;
+        }
+
+        .final-cta h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+            margin-bottom: 16px;
+        }
+
+        .final-cta p {
+            color: var(--gray-light);
+            font-size: 1.05rem;
+            margin-bottom: 32px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer {
+            background: rgba(10, 22, 40, 0.9);
+            border-top: 1px solid rgba(142, 153, 169, 0.1);
+            padding: 48px 0 24px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 36px;
+        }
+
+        .footer-brand .logo {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .footer-brand p {
+            color: var(--gray);
+            font-size: 0.85rem;
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            color: var(--white);
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--teal-glow);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(142, 153, 169, 0.1);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .footer-social a:hover {
+            color: var(--teal-glow);
+        }
+
+        @media (max-width: 992px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .problem-grid {
+                grid-template-columns: 1fr;
+            }
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            .steps {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .step::after {
+                display: none;
+            }
+            .testimonial-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 0;
+            }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(10, 22, 40, 0.98);
+                flex-direction: column;
+                padding: 20px 24px;
+                gap: 16px;
+                border-top: 1px solid rgba(142, 153, 169, 0.1);
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .nav-toggle {
+                display: block;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .audience-grid {
+                grid-template-columns: 1fr;
+            }
+            .steps {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+                margin: 0 auto;
+            }
+            .hero-stats {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .testimonial-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 28px;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+            .hipaa-card,
+            .full-disclaimer {
+                padding: 24px 20px;
+            }
+            .disclaimer-banner {
+                padding: 20px;
+            }
+            .disclaimer-banner-inner {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .pricing-card {
+                padding: 36px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-buttons {
+                flex-direction: column;
+            }
+            .btn {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="container">
+            <a href="#" class="logo">Code<span>Chart</span></a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how-it-works">How It Works</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="https://nurse2web3.gumroad.com" target="_blank" rel="noopener" class="btn btn-primary" style="padding:10px 24px; font-size:0.85rem;">Get CodeChart</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">&#9776;</button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="hero-medical-icons">
+            <!-- Heartbeat / EKG line left -->
+            <svg class="icon-heartbeat" viewBox="0 0 220 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 40 H55 L65 10 L80 70 L95 20 L108 55 L118 40 H220" stroke="#22c9b8" stroke-width="3" fill="none"/>
+            </svg>
+            <!-- Medical cross top right -->
+            <svg class="icon-cross" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="22" y="5" width="26" height="60" rx="5" fill="#ff3b4e"/>
+                <rect x="5" y="22" width="60" height="26" rx="5" fill="#ff3b4e"/>
+            </svg>
+            <!-- Heart bottom left -->
+            <svg class="icon-heart" viewBox="0 0 55 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M27.5 48 C27.5 48 5 33 5 18 C5 10 11 5 18 5 C22 5 25.5 7 27.5 10 C29.5 7 33 5 37 5 C44 5 50 10 50 18 C50 33 27.5 48 27.5 48Z" fill="#ff3b4e"/>
+            </svg>
+            <!-- Pulse line bottom right -->
+            <svg class="icon-pulse-right" viewBox="0 0 200 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 35 H45 L55 5 L72 65 L88 18 L100 48 L110 35 H200" stroke="#f0c85a" stroke-width="3" fill="none"/>
+            </svg>
+            <!-- Stethoscope mid right -->
+            <svg class="icon-stethoscope" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 5 C18 5 10 5 10 15 L10 35 C10 45 20 50 30 50 C40 50 50 45 50 35 L50 28" stroke="#22c9b8" stroke-width="3" fill="none" stroke-linecap="round"/>
+                <circle cx="50" cy="23" r="5" stroke="#22c9b8" stroke-width="2.5" fill="none"/>
+                <circle cx="30" cy="50" r="4.5" fill="#22c9b8" opacity="0.6"/>
+                <path d="M42 5 C42 5 50 5 50 15" stroke="#22c9b8" stroke-width="3" fill="none" stroke-linecap="round"/>
+            </svg>
+            <!-- Pill/capsule mid left -->
+            <svg class="icon-pill" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="8" y="2" width="16" height="41" rx="8" transform="rotate(30 16 22)" stroke="#f0c85a" stroke-width="2.5" fill="none"/>
+                <line x1="8" y1="22" x2="28" y2="22" stroke="#f0c85a" stroke-width="2" transform="rotate(30 16 22)"/>
+            </svg>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">Built by an ER Nurse, for Nurses</div>
+                <h1>When the code is called, <span class="highlight">clarity saves lives.</span></h1>
+                <p>CodeChart is a fast-access clinical support tool that puts ACLS pathways, medication dosing, cardiac arrest checklists, and post-resuscitation guidance at your fingertips &mdash; exactly when you need them most.</p>
+                <p class="hero-scope-statement">CodeChart is an organizational and rapid-reference support tool only. It is intended to complement professional training, clinical judgment, hospital policy, and institutional protocols. <span class="hero-scope-highlight">It does not replace ACLS certification, nursing knowledge or clinical judgement, physician orders, or facility-approved clinical procedures.</span></p>
+                <div class="hero-buttons">
+                    <a href="https://nurse2web3.gumroad.com" target="_blank" rel="noopener" class="btn btn-primary">Get CodeChart &mdash; $24.99</a>
+                    <a href="#features" class="btn btn-outline">See Features</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">$24.99</div>
+                        <div class="hero-stat-label">One-Time Purchase</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">6</div>
+                        <div class="hero-stat-label">Core Modules</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">24/7</div>
+                        <div class="hero-stat-label">Access Anytime</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Statement -->
+    <section class="problem" id="problem">
+        <div class="container">
+            <div class="section-label">The Problem</div>
+            <div class="section-title">Code Blue events are chaos. <br>Your tools shouldn't be.</div>
+            <div class="section-subtitle">In the most critical moments of patient care, nurses need instant access to organized, reliable clinical information &mdash; not scattered notes or memory alone.</div>
+            <div class="problem-grid">
+                <ul class="problem-list">
+                    <li>
+                        <span class="problem-icon">&#128680;</span>
+                        <div>
+                            <strong>Seconds count, information scatters</strong>
+                            <p>During a code, you need medication doses, ACLS pathways, and task assignments immediately. Flipping through pocket cards or scrolling apps wastes precious time.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="problem-icon">&#129504;</span>
+                        <div>
+                            <strong>High-stress recall is unreliable</strong>
+                            <p>Under adrenaline, even experienced nurses can blank on dosing protocols or skip critical steps. A quick-reference backup supports your clinical judgment.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="problem-icon">&#128203;</span>
+                        <div>
+                            <strong>Disorganized resources cost confidence</strong>
+                            <p>Existing tools are either too complex or too scattered. Nurses need a single, organized reference built for the speed of acute care.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="problem-icon">&#129657;</span>
+                        <div>
+                            <strong>New nurses face the steepest learning curve</strong>
+                            <p>Newer acute care nurses are expected to perform at Code Blue events with limited real-world reps. CodeChart bridges the confidence gap.</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="problem-visual">
+                    <div class="big-icon">&#129658;</div>
+                    <h3>Built to support the nurse,<br>not replace the nurse.</h3>
+                    <p>CodeChart puts organized, evidence-based quick-reference information in your hands so you can focus on what matters &mdash; your patient.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features">
+        <div class="container">
+            <div class="text-center">
+                <div class="section-label">Features</div>
+                <div class="section-title">Everything you need, <span class="highlight-teal">one tap away</span></div>
+                <div class="section-subtitle">Six core modules designed around the real-world workflow of code events, rapid responses, and acute cardiac care.</div>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">&#9889;</span>
+                    <h3>Code Blue Workflow Support</h3>
+                    <p>Step-by-step guidance for managing code events with role clarity, timing cues, and organized task flow to keep the team coordinated.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#128147;</span>
+                    <h3>ACLS Pathway Reference</h3>
+                    <p>Quick-access ACLS algorithm pathways for cardiac arrest, bradycardia, tachycardia, and acute coronary syndromes.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#128227;</span>
+                    <h3>Rapid Response Guidance</h3>
+                    <p>Pre-code assessment support and rapid response checklists to help identify deteriorating patients and escalate care confidently.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#128138;</span>
+                    <h3>Medication &amp; Dosing Reference</h3>
+                    <p>Critical cardiac medication dosing at a glance &mdash; epinephrine, amiodarone, atropine, vasopressin, and more with route and frequency details.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#9745;&#65039;</span>
+                    <h3>Cardiac Arrest Task Checklists</h3>
+                    <p>Role-based checklists for team leader, compressor, medication nurse, recorder, and airway &mdash; so nothing gets missed during the code.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#128200;</span>
+                    <h3>Post-Resuscitation Care</h3>
+                    <p>Structured post-ROSC care guidance including targeted temperature management, hemodynamic goals, and neurological assessment support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who It's For -->
+    <section class="audience" id="audience">
+        <div class="container">
+            <div class="text-center">
+                <div class="section-label">Who It's For</div>
+                <div class="section-title">Built for nurses on the <span class="highlight">front line</span></div>
+                <div class="section-subtitle">If you work in acute care and respond to code events, CodeChart was made for you.</div>
+            </div>
+            <div class="audience-grid">
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Emergency Department (ER) Nurses</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Intensive Care Unit (ICU) Nurses</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Telemetry &amp; Stepdown Unit Nurses</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Rapid Response Team Members</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Acute Care Clinicians</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>New Grad Nurses in Critical Care</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Travel Nurses Onboarding at New Facilities</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Nursing Students Preparing for Clinicals</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works">
+        <div class="container">
+            <div class="text-center">
+                <div class="section-label">How It Works</div>
+                <div class="section-title">Purchase today, <span class="highlight-teal">access instantly</span></div>
+                <div class="section-subtitle">No complicated setup. No ongoing fees. One-time purchase, lifetime access &mdash; ready when you need it.</div>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Purchase</h3>
+                    <p>One-time payment of $24.99 through our secure Gumroad checkout. No subscription, ever.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Check Your Email</h3>
+                    <p>You'll receive instant access credentials and a direct link to CodeChart in your inbox.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Sign In</h3>
+                    <p>Log in to your CodeChart account from any device &mdash; phone, tablet, or desktop.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Access Anytime</h3>
+                    <p>Open CodeChart whenever you need it. On the unit, in the break room, during study sessions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About the Creator -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-label">About the Creator</div>
+            <div class="section-title">Built by a nurse who <span class="highlight">lived it</span></div>
+            <div class="about-content">
+                <div class="about-card">
+                    <div class="creator-icon">&#129657;</div>
+                    <h3>Nurse2Web3</h3>
+                    <div class="brand">Nurse2Web3 | From Bedside to Blockchain</div>
+                </div>
+                <div class="about-text">
+                    <h3>Nearly a decade at the bedside. Every code taught me something.</h3>
+                    <p>I spent years as an ER nurse responding to code blues, rapid responses, and cardiac emergencies. I saw firsthand how even experienced nurses scramble for information in high-pressure moments &mdash; medication doses, algorithm pathways, role assignments.</p>
+                    <p>I built CodeChart because I wanted the tool I wished I had during those codes. Something fast, organized, and designed around how nurses actually work during emergencies. Not a textbook. Not a 200-page app. A quick-reference tool that supports your clinical judgment when the pressure is highest.</p>
+                    <p>I bring clinical-level critical thinking, evidence-based research methodology, and nearly a decade of patient education experience to everything I build.</p>
+                    <p class="tagline">"From Bedside to Blockchain" &mdash; building tools that bridge clinical expertise with technology.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="social-proof">
+        <div class="container">
+            <div class="text-center">
+                <div class="section-label">What Nurses Are Saying</div>
+                <div class="section-title">Trusted by nurses in <span class="highlight-teal">acute care</span></div>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p>"I pulled this up during my first code as a new grad and it saved me from blanking on amiodarone dosing. Worth every penny."</p>
+                    <div class="testimonial-author">Sarah M.</div>
+                    <div class="testimonial-role">ICU Nurse, New Grad</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p>"Clean, fast, and organized exactly the way you think during a code. This is what pocket cards wish they could be."</p>
+                    <div class="testimonial-author">James T.</div>
+                    <div class="testimonial-role">ER Nurse, 6 Years</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p>"I use it during rapid responses to double-check my assessment before calling the code team. Great for building confidence."</p>
+                    <div class="testimonial-author">Priya K.</div>
+                    <div class="testimonial-role">Telemetry RN</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="text-center">
+                <div class="section-label">Pricing</div>
+                <div class="section-title">One purchase. <span class="highlight">Lifetime access.</span></div>
+                <div class="section-subtitle">No subscriptions. No hidden fees. No recurring charges. Pay once, use forever.</div>
+            </div>
+            <div class="pricing-card">
+                <div class="pricing-badge">Best Value</div>
+                <div class="pricing-amount"><sup>$</sup>24<span style="font-size:1.8rem;">.99</span></div>
+                <div class="pricing-period">One-time payment &mdash; lifetime access</div>
+                <ul class="pricing-features">
+                    <li>Code Blue Workflow Support</li>
+                    <li>ACLS Pathway Reference</li>
+                    <li>Rapid Response Guidance</li>
+                    <li>Medication &amp; Dosing Reference</li>
+                    <li>Cardiac Arrest Task Checklists</li>
+                    <li>Post-Resuscitation Care Support</li>
+                    <li>Access from any device</li>
+                    <li>All future updates included</li>
+                    <li>No subscription &mdash; ever</li>
+                </ul>
+                <a href="https://nurse2web3.gumroad.com" target="_blank" rel="noopener" class="btn btn-primary pricing-cta">Get CodeChart Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+        <div class="container">
+            <div class="text-center">
+                <div class="section-label">FAQ</div>
+                <div class="section-title">Common questions</div>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        What exactly is CodeChart?
+                        <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">CodeChart is a web-based clinical support tool that gives nurses fast access to organized Code Blue workflows, ACLS pathway references, cardiac medication dosing, task checklists, and post-resuscitation care guidance. It is a reference and organizational tool &mdash; not a replacement for ACLS training, physician orders, or institutional protocols.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        Is this a subscription?
+                        <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">No. CodeChart is a one-time purchase of $24.99. There are no recurring fees, no monthly charges, and no hidden costs. You pay once and get lifetime access, including all future updates.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        Can I use CodeChart on my phone during a shift?
+                        <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Yes. CodeChart is a web app that works on any device with a browser &mdash; phone, tablet, or desktop. No download required. You can access it anytime, anywhere you have internet access.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        Does CodeChart replace ACLS certification?
+                        <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">No. CodeChart is a supplemental reference tool. It is designed to complement your ACLS certification, clinical training, and facility-specific protocols. It does not replace any certification, physician orders, or institutional procedures. Always follow your facility's approved clinical guidelines.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        Does CodeChart collect or store patient data?
+                        <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">No. CodeChart never collects, stores, or uses any HIPAA-protected information. It is a reference tool only. No patient data is ever entered into or processed by CodeChart.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        Who built CodeChart?
+                        <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">CodeChart was built by an ER nurse with nearly a decade of clinical experience. She built CodeChart because she wanted the tool she wished she had during code events. She builds under the brand Nurse2Web3.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        How do I get support if I have issues?
+                        <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Email us at codechart@nurse2web3.com and we'll respond as quickly as possible. We're a small team and we care about every user's experience.</div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        Is there a refund policy?
+                        <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">Refund policies are handled through Gumroad, our payment platform. If you have any issues with your purchase, please reach out to codechart@nurse2web3.com and we'll work with you.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HIPAA Notice -->
+    <section class="hipaa-section" id="hipaa">
+        <div class="container">
+            <div class="text-center">
+                <div class="section-label">Privacy &amp; Data</div>
+                <div class="section-title">Your data. Your patients' data. <span class="highlight-teal">Protected.</span></div>
+            </div>
+            <div class="hipaa-card">
+                <span class="hipaa-icon">&#128274;</span>
+                <div>
+                    <h3>HIPAA &amp; Patient Data Notice</h3>
+                    <p><strong>No HIPAA-protected information is ever collected, stored, or used within CodeChart.</strong> CodeChart is a clinical reference tool only. It does not accept, process, or transmit any patient health information (PHI). No patient data is entered into the application at any point. Your patients' privacy is never at risk when using CodeChart.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Full Disclaimer -->
+    <section id="disclaimer">
+        <div class="container">
+            <div class="full-disclaimer">
+                <h3>&#9888;&#65039; Clinical Disclaimer</h3>
+                <p>CodeChart is an organizational and rapid-reference support tool only. It is intended to complement professional training, clinical judgment, hospital policy, and institutional protocols. It does not replace ACLS certification, physician orders, or facility-approved clinical procedures. Always follow your facility's approved guidelines, consult your institutional protocols, and exercise professional clinical judgment. The information provided in CodeChart is for supplemental reference purposes only and should not be used as the sole basis for clinical decision-making.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to feel more <span class="highlight">prepared</span> at your next code?</h2>
+            <p>One-time purchase. Lifetime access. Built by a nurse who gets it.</p>
+            <a href="https://nurse2web3.gumroad.com" target="_blank" rel="noopener" class="btn btn-primary">Get CodeChart &mdash; $24.99</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">Code<span>Chart</span></a>
+                    <p>A clinical support tool built by an ER nurse with nearly a decade of experience. Organized, fast, and designed for how nurses actually work during code events.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#hipaa">HIPAA Notice</a></li>
+                        <li><a href="#disclaimer">Disclaimer</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Connect</h4>
+                    <ul>
+                        <li><a href="mailto:codechart@nurse2web3.com">codechart@nurse2web3.com</a></li>
+                        <li><a href="https://code-chart.replit.app" target="_blank" rel="noopener">code-chart.replit.app</a></li>
+                        <li><a href="https://nurse2web3.gumroad.com" target="_blank" rel="noopener">Gumroad Store</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CodeChart by Nurse2Web3. All rights reserved. Not a medical device. For supplemental reference use only.</p>
+                <div class="footer-social">
+                    <a href="https://tiktok.com/@nurse2web3" target="_blank" rel="noopener">TikTok</a>
+                    <a href="https://x.com/nurse2web3" target="_blank" rel="noopener">X</a>
+                    <a href="https://linkedin.com/in/nurse2web3" target="_blank" rel="noopener">LinkedIn</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 40);
+        });
+
+        // Mobile nav toggle
+        document.getElementById('navToggle').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // Close mobile nav on link click
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('active');
+            });
+        });
+
+        // FAQ accordion
+        document.querySelectorAll('.faq-question').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const item = btn.parentElement;
+                const isOpen = item.classList.contains('open');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+                if (!isOpen) item.classList.add('open');
+                btn.setAttribute('aria-expanded', !isOpen);
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
