@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nurse2Web3 — From Bedside to Blockchain</title>
+  <meta name="description" content="Natalia Wright MSN, RN — Crypto educator, Web3 builder, and the bridge between healthcare and blockchain." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep: #050a12;
+      --bg-surface: #0a1020;
+      --bg-card: #0d1528;
+      --bg-card-hover: #111d35;
+      --gold: #d4a853;
+      --gold-bright: #f0cc6a;
+      --gold-dim: #8a7234;
+      --teal: #00e6cc;
+      --teal-mid: #00c8b4;
+      --teal-dim: #009e8e;
+      --teal-glow: rgba(0,230,204,0.4);
+      --candle-green: #00e676;
+      --candle-red: #ff5252;
+      --text-primary: #eae6de;
+      --text-secondary: #8e99ae;
+      --text-muted: #4a5568;
+      --border: rgba(0,230,204,0.12);
+      --border-gold: rgba(212,168,83,0.2);
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Outfit', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: rgba(0,230,204,0.3); color: #fff; }
+
+    a { color: var(--teal); text-decoration: none; transition: all 0.3s; }
+    a:hover { color: var(--gold-bright); }
+
+    /* ══════ NOISE OVERLAY ══════ */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.02;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+    }
+
+    /* ══════ AMBIENT GLOWS ══════ */
+    .glow {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      border-radius: 50%;
+      filter: blur(140px);
+    }
+    .glow--teal-top { width: 700px; height: 700px; top: -250px; left: -100px; background: rgba(0,230,204,0.08); }
+    .glow--gold-right { width: 600px; height: 600px; top: 30%; right: -200px; background: rgba(212,168,83,0.06); }
+    .glow--teal-bottom { width: 800px; height: 800px; bottom: -300px; left: 30%; background: rgba(0,230,204,0.05); }
+
+    /* ══════ NAVIGATION ══════ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 0 60px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(5,10,18,0.6);
+      backdrop-filter: blur(30px) saturate(1.8);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.4s var(--ease-out-expo);
+    }
+
+    .nav.scrolled {
+      height: 64px;
+      background: rgba(5,10,18,0.92);
+      box-shadow: 0 4px 40px rgba(0,0,0,0.5);
+    }
+
+    .nav__logo {
+      font-family: var(--font-body);
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-transform: uppercase;
+    }
+
+    .nav__links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav__links a {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--teal-mid);
+      position: relative;
+      padding-bottom: 6px;
+    }
+
+    .nav__links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 2px;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      transition: width 0.5s var(--ease-out-expo);
+    }
+
+    .nav__links a:hover { color: var(--teal); }
+    .nav__links a:hover::after { width: 100%; }
+
+    .nav__toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 32px; height: 24px;
+      position: relative;
+    }
+    .nav__toggle span {
+      display: block; width: 100%; height: 2px;
+      background: var(--teal);
+      position: absolute; left: 0;
+      transition: all 0.3s;
+    }
+    .nav__toggle span:nth-child(1) { top: 0; }
+    .nav__toggle span:nth-child(2) { top: 11px; }
+    .nav__toggle span:nth-child(3) { top: 22px; }
+
+    /* ══════ HERO ══════ */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 120px 60px 40px;
+      overflow: hidden;
+    }
+
+    /* Animated grid background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,230,204,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,230,204,0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 20%, transparent 65%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, black 20%, transparent 65%);
+      animation: gridPulse 8s ease-in-out infinite;
+    }
+
+    @keyframes gridPulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      width: 3px; height: 3px;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: particleFloat linear infinite;
+    }
+
+    @keyframes particleFloat {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+    }
+
+    .hero__eyebrow {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 28px;
+      text-shadow: 0 0 30px var(--teal-glow);
+      opacity: 0;
+      animation: fadeUp 1s var(--ease-out-expo) 0.3s forwards;
+    }
+
+    .hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(5rem, 12vw, 10rem);
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      letter-spacing: -2px;
+      opacity: 0;
+      animation: fadeUp 1.2s var(--ease-out-expo) 0.5s forwards;
+    }
+
+    .hero__title .line1 {
+      display: block;
+      background: linear-gradient(135deg, var(--teal), #00ffcc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 40px rgba(0,230,204,0.3));
+    }
+
+    .hero__title .line2 {
+      display: block;
+      color: #fff;
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .hero__title .line3 {
+      display: block;
+      background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 40px rgba(212,168,83,0.3));
+    }
+
+    .hero__divider {
+      width: 120px; height: 2px;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      margin: 40px 0;
+      opacity: 0;
+      animation: fadeUp 1s var(--ease-out-expo) 0.8s forwards;
+      box-shadow: 0 0 20px rgba(0,230,204,0.3);
+    }
+
+    .hero__subtitle {
+      font-family: var(--font-body);
+      font-size: 1.4rem;
+      color: var(--text-secondary);
+      text-align: center;
+      max-width: 650px;
+      line-height: 1.8;
+      font-weight: 300;
+      opacity: 0;
+      animation: fadeUp 1s var(--ease-out-expo) 1s forwards;
+    }
+
+    .hero__cta-group {
+      display: flex;
+      gap: 24px;
+      margin-top: 48px;
+      opacity: 0;
+      animation: fadeUp 1s var(--ease-out-expo) 1.2s forwards;
+    }
+
+    .btn {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 18px 40px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.4s var(--ease-out-expo);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn--primary {
+      background: linear-gradient(135deg, var(--teal), var(--teal-mid));
+      color: var(--bg-deep);
+    }
+    .btn--primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 40px rgba(0,230,204,0.3);
+    }
+
+    .btn--gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+      color: var(--bg-deep);
+    }
+    .btn--gold:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 40px rgba(212,168,83,0.3);
+    }
+
+    /* ══════ ECG → CANDLESTICK BANNER ══════ */
+    .ecg-banner {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(180deg, rgba(0,230,204,0.03), rgba(5,10,18,0.8));
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .ecg-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 25% 50%, rgba(0,230,204,0.06) 0%, transparent 50%),
+                  radial-gradient(ellipse at 80% 50%, rgba(212,168,83,0.06) 0%, transparent 50%);
+    }
+
+    .ecg-banner__label {
+      position: absolute;
+      top: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+    .ecg-banner__label--left { left: 32px; color: var(--teal); }
+    .ecg-banner__label--right { right: 32px; color: var(--gold); }
+
+    .ecg-banner svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ══════ SECTIONS ══════ */
+    .section {
+      position: relative;
+      padding: 140px 60px;
+      z-index: 1;
+    }
+
+    .section__label {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(0,230,204,0.3);
+    }
+
+    .section__heading {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 28px;
+    }
+
+    .section__heading em {
+      font-style: italic;
+      font-weight: 300;
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section__border-top { border-top: 1px solid var(--border); }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-80px);
+      transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo);
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(80px);
+      transition: opacity 1s var(--ease-out-expo), transform 1s var(--ease-out-expo);
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.85);
+      transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+    }
+    .reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+    /* Stagger children */
+    .stagger-children.visible > * {
+      opacity: 0;
+      animation: staggerIn 0.7s var(--ease-out-expo) forwards;
+    }
+    .stagger-children.visible > *:nth-child(1) { animation-delay: 0s; }
+    .stagger-children.visible > *:nth-child(2) { animation-delay: 0.1s; }
+    .stagger-children.visible > *:nth-child(3) { animation-delay: 0.2s; }
+    .stagger-children.visible > *:nth-child(4) { animation-delay: 0.3s; }
+    .stagger-children.visible > *:nth-child(5) { animation-delay: 0.4s; }
+
+    @keyframes staggerIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ══════ ABOUT ══════ */
+    .about { max-width: 1300px; margin: 0 auto; }
+
+    .about__grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 80px;
+      align-items: start;
+      margin-top: 56px;
+    }
+
+    .about__story p {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      margin-bottom: 28px;
+      font-weight: 300;
+    }
+
+    .about__story p strong {
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    .about__story p em {
+      color: var(--gold);
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .about__stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .stat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s var(--ease-out-expo);
+    }
+
+    .stat::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s var(--ease-out-expo);
+    }
+
+    .stat:hover {
+      border-color: rgba(0,230,204,0.3);
+      background: var(--bg-card-hover);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 30px rgba(0,230,204,0.08);
+    }
+
+    .stat:hover::before { transform: scaleX(1); }
+
+    .stat__number {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .stat__label {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    /* ══════ PRODUCTS ══════ */
+    .products { max-width: 1300px; margin: 0 auto; }
+
+    .products__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 24px;
+      margin-top: 56px;
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 44px 36px 40px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s var(--ease-out-expo);
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 0%, rgba(0,230,204,0.06), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .product-card:hover {
+      border-color: rgba(0,230,204,0.3);
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 40px rgba(0,230,204,0.06);
+    }
+
+    .product-card:hover::before { opacity: 1; }
+
+    .product-card__icon {
+      width: 56px; height: 56px;
+      border: 1px solid rgba(0,230,204,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+      font-size: 1.5rem;
+      background: rgba(0,230,204,0.05);
+      transition: all 0.4s;
+    }
+
+    .product-card:hover .product-card__icon {
+      border-color: var(--teal);
+      box-shadow: 0 0 24px rgba(0,230,204,0.2);
+      background: rgba(0,230,204,0.1);
+    }
+
+    .product-card__name {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .product-card__tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 18px;
+      display: inline-block;
+    }
+
+    .product-card__desc {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+
+    .product-card__corner {
+      position: absolute;
+      top: 0; right: 0;
+      width: 48px; height: 48px;
+      border-left: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.4s;
+    }
+
+    .product-card:hover .product-card__corner {
+      border-color: var(--teal-dim);
+      box-shadow: inset 3px -3px 12px rgba(0,230,204,0.08);
+    }
+
+    .product-card__link {
+      display: inline-block;
+      margin-top: 20px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--teal);
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0,230,204,0.3);
+      transition: all 0.3s;
+    }
+
+    .product-card__link:hover {
+      color: var(--gold-bright);
+      border-color: var(--gold);
+      padding-left: 8px;
+    }
+
+    /* ══════ EVENTS ══════ */
+    .events { max-width: 1300px; margin: 0 auto; }
+
+    .event-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 52px;
+      display: grid;
+      grid-template-columns: 120px 1fr auto;
+      gap: 48px;
+      align-items: center;
+      margin-top: 32px;
+      transition: all 0.5s var(--ease-out-expo);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .event-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--teal), var(--gold));
+      transform: scaleY(0);
+      transition: transform 0.5s var(--ease-out-expo);
+    }
+
+    .event-card:hover { border-color: rgba(0,230,204,0.3); }
+    .event-card:hover::before { transform: scaleY(1); }
+
+    .event-card + .event-card { margin-top: 20px; }
+
+    .event__date { text-align: center; }
+
+    .event__month {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+
+    .event__day {
+      font-family: var(--font-display);
+      font-size: 4rem;
+      font-weight: 700;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .event__info h3 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .event__info p {
+      color: var(--text-secondary);
+      font-weight: 300;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+
+    .event__badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 12px 24px;
+      border: 1px solid var(--teal-dim);
+      color: var(--teal);
+      white-space: nowrap;
+      transition: all 0.3s;
+    }
+
+    .event-card:hover .event__badge {
+      background: rgba(0,230,204,0.08);
+      box-shadow: 0 0 16px rgba(0,230,204,0.12);
+    }
+
+    /* ══════ AI SUPPORT ══════ */
+    .ai-support { max-width: 900px; margin: 0 auto; text-align: center; }
+
+    .ai-chat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      margin-top: 56px;
+      overflow: hidden;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.4);
+    }
+
+    .ai-chat__header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 22px 32px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(0,230,204,0.05), rgba(212,168,83,0.03));
+    }
+
+    .ai-chat__dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 12px var(--teal), 0 0 24px rgba(0,230,204,0.3);
+      animation: pulse 2s infinite;
+    }
+
+    .ai-chat__status {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+
+    .ai-chat__messages {
+      padding: 32px;
+      min-height: 220px;
+      max-height: 400px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .ai-msg {
+      max-width: 80%;
+      padding: 16px 24px;
+      font-size: 1rem;
+      line-height: 1.7;
+      font-weight: 300;
+      animation: msgIn 0.4s var(--ease-out-expo);
+    }
+
+    @keyframes msgIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ai-msg--bot {
+      align-self: flex-start;
+      background: rgba(0,230,204,0.06);
+      border: 1px solid rgba(0,230,204,0.15);
+      border-radius: 0 16px 16px 16px;
+    }
+
+    .ai-msg--user {
+      align-self: flex-end;
+      background: rgba(212,168,83,0.08);
+      border: 1px solid rgba(212,168,83,0.2);
+      border-radius: 16px 0 16px 16px;
+    }
+
+    .ai-msg--typing {
+      align-self: flex-start;
+      background: rgba(0,230,204,0.06);
+      border: 1px solid rgba(0,230,204,0.15);
+      border-radius: 0 16px 16px 16px;
+      padding: 16px 28px;
+      display: none;
+    }
+
+    .ai-msg--typing span {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      margin: 0 3px;
+      animation: typingDot 1.4s infinite;
+    }
+    .ai-msg--typing span:nth-child(2) { animation-delay: 0.2s; }
+    .ai-msg--typing span:nth-child(3) { animation-delay: 0.4s; }
+
+    .ai-chat__suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0 32px 24px;
+    }
+
+    .ai-chat__suggestion {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      padding: 10px 20px;
+      border: 1px solid var(--border);
+      color: var(--teal);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .ai-chat__suggestion:hover {
+      border-color: var(--teal);
+      background: rgba(0,230,204,0.06);
+      box-shadow: 0 0 16px rgba(0,230,204,0.1);
+    }
+
+    .ai-chat__input-area {
+      display: flex;
+      border-top: 1px solid var(--border);
+    }
+
+    .ai-chat__input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 20px 28px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .ai-chat__input::placeholder { color: var(--text-muted); }
+
+    .ai-chat__send {
+      background: none;
+      border: none;
+      border-left: 1px solid var(--border);
+      padding: 20px 28px;
+      color: var(--teal);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .ai-chat__send:hover {
+      background: rgba(0,230,204,0.06);
+      color: var(--teal);
+      box-shadow: inset 0 0 20px rgba(0,230,204,0.05);
+    }
+
+    /* ══════ SOCIAL LINKS ══════ */
+    .socials { max-width: 1300px; margin: 0 auto; text-align: center; }
+
+    .socials__grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+
+    .social-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 48px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      transition: all 0.5s var(--ease-out-expo);
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .social-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      transform: scaleX(0);
+      transition: transform 0.5s var(--ease-out-expo);
+    }
+
+    .social-card:hover {
+      border-color: rgba(0,230,204,0.3);
+      transform: translateY(-10px);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5), 0 0 30px rgba(0,230,204,0.06);
+    }
+
+    .social-card:hover::before { transform: scaleX(1); }
+
+    .social-card__icon {
+      font-size: 2.5rem;
+      width: 80px; height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      color: var(--teal);
+      transition: all 0.4s;
+    }
+
+    .social-card:hover .social-card__icon {
+      border-color: var(--teal);
+      box-shadow: 0 0 32px rgba(0,230,204,0.15);
+      background: rgba(0,230,204,0.05);
+    }
+
+    .social-card__name {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .social-card__handle {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      color: var(--teal-dim);
+    }
+
+    /* ══════ FOOTER ══════ */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 80px 60px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent, rgba(0,230,204,0.02));
+    }
+
+    .footer__inner {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 60px;
+      position: relative;
+    }
+
+    .footer__brand-section {}
+
+    .footer__brand {
+      font-family: var(--font-body);
+      font-size: 2.4rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .footer__tagline {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--teal);
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(0,230,204,0.2);
+    }
+
+    .footer__desc {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+
+    .footer__nav h4 {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 24px;
+    }
+
+    .footer__nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .footer__nav ul a {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      font-weight: 300;
+      transition: all 0.3s;
+    }
+
+    .footer__nav ul a:hover {
+      color: var(--teal);
+      padding-left: 8px;
+    }
+
+    .footer__social h4 {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 24px;
+    }
+
+    .footer__social-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer__social-link {
+      width: 52px; height: 52px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: var(--teal);
+      transition: all 0.4s;
+    }
+
+    .footer__social-link:hover {
+      border-color: var(--teal);
+      background: rgba(0,230,204,0.06);
+      box-shadow: 0 0 20px rgba(0,230,204,0.12);
+      transform: translateY(-4px);
+    }
+
+    .footer__bottom {
+      max-width: 1300px;
+      margin: 48px auto 0;
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .footer__copy {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .footer__credit {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--text-secondary);
+    }
+
+    /* ══════ EMAIL SIGNUP ══════ */
+    .email-signup {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+      padding-top: 20px;
+    }
+
+    .email-signup__form {
+      display: flex;
+      margin-top: 28px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .email-signup__form:focus-within {
+      border-color: var(--teal);
+      box-shadow: 0 0 24px rgba(0,230,204,0.08);
+    }
+
+    .email-signup__input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 18px 24px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .email-signup__input::placeholder { color: var(--text-muted); }
+
+    .email-signup__btn {
+      background: linear-gradient(135deg, var(--teal), var(--teal-mid));
+      border: none;
+      padding: 18px 32px;
+      color: var(--bg-deep);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .email-signup__btn:hover {
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      box-shadow: 0 0 20px rgba(0,230,204,0.2);
+    }
+
+    .email-signup__note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
+    /* ══════ DISCLAIMER ══════ */
+    .disclaimer {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 40px 60px;
+      border-top: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+
+    .disclaimer__text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.9;
+      font-weight: 400;
+    }
+
+    .disclaimer__text strong {
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    /* ══════ ANIMATIONS ══════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 12px var(--teal), 0 0 24px rgba(0,230,204,0.3); }
+      50% { opacity: 0.5; box-shadow: 0 0 6px var(--teal); }
+    }
+
+    @keyframes typingDot {
+      0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+      30% { opacity: 1; transform: translateY(-5px); }
+    }
+
+    @keyframes ecgDraw {
+      from { stroke-dashoffset: 3000; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes candleFade {
+      from { opacity: 0; transform: scaleY(0); }
+      to { opacity: 1; transform: scaleY(1); }
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { filter: drop-shadow(0 0 6px var(--teal-glow)); }
+      50% { filter: drop-shadow(0 0 18px var(--teal-glow)); }
+    }
+
+    /* ══════ RESPONSIVE ══════ */
+    @media (max-width: 1024px) {
+      .about__grid { grid-template-columns: 1fr; gap: 48px; }
+      .socials__grid { grid-template-columns: repeat(2, 1fr); }
+      .footer__inner { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    @media (max-width: 768px) {
+      .section { padding: 100px 28px; }
+      .hero { padding: 100px 28px 40px; }
+      .nav { padding: 0 24px; }
+      .nav__links { display: none; }
+      .nav__links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 80px; left: 0; right: 0;
+        background: rgba(5,10,18,0.98);
+        backdrop-filter: blur(30px);
+        padding: 32px 48px;
+        border-bottom: 1px solid var(--border);
+        gap: 24px;
+      }
+      .nav__toggle { display: block; }
+      .hero__cta-group { flex-direction: column; align-items: center; }
+      .products__grid { grid-template-columns: 1fr; }
+      .event-card { grid-template-columns: 1fr; gap: 24px; padding: 36px; }
+      .event__badge { justify-self: start; }
+      .socials__grid { grid-template-columns: 1fr 1fr; }
+      .footer__bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .about__stats { grid-template-columns: 1fr; }
+      .socials__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient Glows -->
+  <div class="glow glow--teal-top"></div>
+  <div class="glow glow--gold-right"></div>
+  <div class="glow glow--teal-bottom"></div>
+
+  <!-- ═══════ NAVIGATION ═══════ -->
+  <nav class="nav" id="nav">
+    <div class="nav__logo">Nurse2Web3</div>
+    <button class="nav__toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav__links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#events">Events</a></li>
+      <li><a href="#ai-support">Support</a></li>
+      <li><a href="#connect">Connect</a></li>
+    </ul>
+  </nav>
+
+  <!-- ═══════ HERO ═══════ -->
+  <section class="hero" id="hero">
+    <!-- Particles generated by JS -->
+    <div class="hero__eyebrow">From Bedside to Blockchain</div>
+    <h1 class="hero__title">
+      <span class="line1">Nurse.</span>
+      <span class="line2">Builder.</span>
+      <span class="line3">Educator.</span>
+    </h1>
+    <div class="hero__divider"></div>
+    <p class="hero__subtitle">
+      MSN, RN with nearly a decade of clinical experience — now teaching beginners
+      how to navigate crypto, blockchain, and AI. No jargon. No hype. Just clarity.
+    </p>
+    <div class="hero__cta-group">
+      <a href="#products" class="btn btn--primary">Explore Products</a>
+      <a href="#ai-support" class="btn btn--gold">Ask Me Anything</a>
+    </div>
+  </section>
+
+  <!-- ═══════ ECG → CANDLESTICK BANNER ═══════ -->
+  <div class="ecg-banner" id="ecgBanner">
+    <div class="ecg-banner__label ecg-banner__label--left">&#x2764; ECG Rhythm</div>
+    <div class="ecg-banner__label ecg-banner__label--right">Market Signals &#x25B6;</div>
+    <svg viewBox="0 0 1440 200" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ecgGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#00e6cc" stop-opacity="0.9"/>
+          <stop offset="55%" stop-color="#00e6cc" stop-opacity="0.6"/>
+          <stop offset="70%" stop-color="#00e6cc" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#d4a853" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="glowT" x="-20%" y="-50%" width="140%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glowT2" x="-30%" y="-80%" width="160%" height="260%">
+          <feGaussianBlur stdDeviation="5.5" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glowG" x="-20%" y="-50%" width="140%" height="200%">
+          <feGaussianBlur stdDeviation="4" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Baseline -->
+      <line x1="0" y1="100" x2="1440" y2="100" stroke="rgba(0,230,204,0.08)" stroke-width="1" stroke-dasharray="6,12"/>
+
+      <!-- ECG RHYTHM — left 60% -->
+      <!-- Flat lead-in -->
+      <polyline class="ecg-line" points="0,100 80,100 120,100"
+        fill="none" stroke="url(#ecgGrad)" stroke-width="3" filter="url(#glowT)"
+        stroke-dasharray="3000" stroke-dashoffset="3000"/>
+
+      <!-- Beat 1: P wave -->
+      <polyline class="ecg-line" points="120,100 132,100 140,85 148,100 168,100"
+        fill="none" stroke="url(#ecgGrad)" stroke-width="3" filter="url(#glowT)"
+        stroke-dasharray="3000" stroke-dashoffset="3000"/>
+
+      <!-- QRS 1 -->
+      <polyline class="ecg-line" points="168,100 178,100 186,112 196,28 206,172 216,68 226,100 250,100"
+        fill="none" stroke="url(#ecgGrad)" stroke-width="4.5" filter="url(#glowT2)"
+        stroke-dasharray="3000" stroke-dashoffset="3000"/>
+
+      <!-- T wave 1 -->
+      <polyline class="ecg-line" points="250,100 274,100 288,76 302,100 340,100"
+        fill="none" stroke="url(#ecgGrad)" stroke-width="3" filter="url(#glowT)"
+        stroke-dasharray="3000" stroke-dashoffset="3000"/>
+
+      <!-- Beat 2 -->
+      <polyline class="ecg-line" points="340,100 380,100 390,100 398,86 406,100 424,100"
+        fill="none" stroke="url(#ecgGrad)" stroke-width="3" filter="url(#glowT)" opacity="0.85"
+        stroke-dasharray="3000" stroke-dashoffset="3000"/>
+
+      <polyline class="ecg-line" points="424,100 434,112 444,30 454,170 464,70 474,100 496,100"
+        fill="none" stroke="url(#ecgGrad)" stroke-width="4.5" filter="url(#glowT2)" opacity="0.85"
+        stroke-dasharray="3000" stroke-dashoffset="3000"/>
+
+      <polyline class="ecg-line" points="496,100 518,100 530,78 542,100 580,100"
+        fill="none" stroke="url(#ecgGrad)" stroke-width="3" filter="url(#glowT)" opacity="0.75"
+        stroke-dasharray="3000" stroke-dashoffset="3000"/>
+
+      <!-- Beat 3 -->
+      <polyline class="ecg-line" points="580,100 620,100 630,100 638,88 646,100 660,100"
+        fill="none" stroke="url(#ecgGrad)" stroke-width="3" filter="url(#glowT)" opacity="0.65"
+        stroke-dasharray="3000" stroke-dashoffset="3000"/>
+
+      <polyline class="ecg-line" points="660,100 670,110 680,34 690,166 700,72 710,100 730,100"
+        fill="none" stroke="url(#ecgGrad)" stroke-width="4" filter="url(#glowT2)" opacity="0.6"
+        stroke-dasharray="3000" stroke-dashoffset="3000"/>
+
+      <polyline class="ecg-line" points="730,100 750,100 762,80 774,100 810,100"
+        fill="none" stroke="url(#ecgGrad)" stroke-width="3" filter="url(#glowT)" opacity="0.5"
+        stroke-dasharray="3000" stroke-dashoffset="3000"/>
+
+      <!-- Beat 4 — fading to gold transition -->
+      <polyline class="ecg-line" points="810,100 850,100 860,100 868,88 876,100 890,100"
+        fill="none" stroke="url(#ecgGrad)" stroke-width="2.5" opacity="0.4"
+        stroke-dasharray="3000" stroke-dashoffset="3000"/>
+
+      <polyline class="ecg-line" points="890,100 898,108 908,40 918,160 928,74 938,100 960,100"
+        fill="none" stroke="#d4a853" stroke-width="3.5" filter="url(#glowG)" opacity="0.45"
+        stroke-dasharray="3000" stroke-dashoffset="3000"/>
+
+      <!-- CANDLESTICKS — right 35% -->
+      <!-- Candle 1 -->
+      <line class="candle" x1="990" y1="55" x2="990" y2="145" stroke="#d4a853" stroke-width="2.5" opacity="0" filter="url(#glowG)"/>
+      <rect class="candle" x="978" y="65" width="24" height="50" fill="rgba(212,168,83,0.12)" stroke="#d4a853" stroke-width="2" opacity="0" rx="1"/>
+
+      <!-- Candle 2 -->
+      <line class="candle" x1="1040" y1="42" x2="1040" y2="138" stroke="#00e676" stroke-width="3" opacity="0" filter="url(#glowG)"/>
+      <rect class="candle" x="1026" y="50" width="28" height="58" fill="rgba(0,230,118,0.15)" stroke="#00e676" stroke-width="2.5" opacity="0" rx="1"/>
+
+      <!-- Candle 3 — red -->
+      <line class="candle" x1="1095" y1="48" x2="1095" y2="152" stroke="#ff5252" stroke-width="3" opacity="0" filter="url(#glowG)"/>
+      <rect class="candle" x="1079" y="58" width="32" height="64" fill="rgba(255,82,82,0.12)" stroke="#ff5252" stroke-width="2.5" opacity="0" rx="1"/>
+
+      <!-- Candle 4 — green big -->
+      <line class="candle" x1="1155" y1="22" x2="1155" y2="130" stroke="#00e676" stroke-width="3.5" opacity="0" filter="url(#glowG)"/>
+      <rect class="candle" x="1137" y="30" width="36" height="74" fill="rgba(0,230,118,0.18)" stroke="#00e676" stroke-width="3" opacity="0" rx="1"/>
+
+      <!-- Candle 5 — green bigger -->
+      <line class="candle" x1="1220" y1="12" x2="1220" y2="120" stroke="#00e676" stroke-width="4" opacity="0" filter="url(#glowG)"/>
+      <rect class="candle" x="1200" y="18" width="40" height="82" fill="rgba(0,230,118,0.2)" stroke="#00e676" stroke-width="3.5" opacity="0" rx="1"/>
+
+      <!-- Candle 6 — gold biggest -->
+      <line class="candle" x1="1290" y1="6" x2="1290" y2="110" stroke="#d4a853" stroke-width="4.5" opacity="0" filter="url(#glowG)"/>
+      <rect class="candle" x="1268" y="10" width="44" height="88" fill="rgba(212,168,83,0.22)" stroke="#d4a853" stroke-width="4" opacity="0" rx="1"/>
+
+      <!-- Candle 7 — partially off screen -->
+      <line class="candle" x1="1366" y1="2" x2="1366" y2="105" stroke="#d4a853" stroke-width="5" opacity="0" filter="url(#glowG)"/>
+      <rect class="candle" x="1342" y="6" width="48" height="92" fill="rgba(212,168,83,0.25)" stroke="#d4a853" stroke-width="4.5" opacity="0" rx="1"/>
+    </svg>
+  </div>
+
+  <!-- ═══════ ABOUT ═══════ -->
+  <section class="section section__border-top" id="about">
+    <div class="about">
+      <div class="section__label reveal">// About</div>
+      <h2 class="section__heading reveal">
+        A nurse who <em>builds</em>
+      </h2>
+      <div class="about__grid">
+        <div class="about__story reveal-left">
+          <p>
+            I'm <strong>Tally</strong> — Natalia Wright, MSN, RN. I spent nearly a decade
+            in emergency rooms, psychiatric units, and COVID-19 isolation shelters.
+            My career was built on making the complex feel simple for people in
+            their most overwhelmed moments.
+          </p>
+          <p>
+            That same instinct drove me into crypto and blockchain education.
+            I saw an industry full of jargon, gatekeeping, and hype — and a
+            world of beginners who just needed someone to <strong>explain it
+            like a real person.</strong>
+          </p>
+          <p>
+            I'm not a coder. I'm a <em>builder</em> who uses AI tools to ship real products.
+            I've launched live blockchain APIs, trading tools, and educational
+            platforms — all as a non-technical founder. <strong>From Bedside to Blockchain</strong>
+            isn't a tagline. It's the whole story.
+          </p>
+        </div>
+        <div class="about__stats stagger-children reveal-right">
+          <div class="stat">
+            <div class="stat__number">MSN</div>
+            <div class="stat__label">Rush University</div>
+          </div>
+          <div class="stat">
+            <div class="stat__number">~10yr</div>
+            <div class="stat__label">Clinical Experience</div>
+          </div>
+          <div class="stat">
+            <div class="stat__number">6+</div>
+            <div class="stat__label">Products Shipped</div>
+          </div>
+          <div class="stat">
+            <div class="stat__number">1.5yr</div>
+            <div class="stat__label">Crypto Education</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ PRODUCTS ═══════ -->
+  <section class="section section__border-top" id="products">
+    <div class="products">
+      <div class="section__label reveal">// Products</div>
+      <h2 class="section__heading reveal">
+        Built with AI. <em>Shipped</em> for real.
+      </h2>
+      <div class="products__grid stagger-children reveal">
+        <div class="product-card">
+          <div class="product-card__corner"></div>
+          <div class="product-card__icon">&#x26A1;</div>
+          <div class="product-card__name">HedgeAlphaOracle</div>
+          <div class="product-card__tag">Live API &middot; x402 &middot; Base &middot; Monad</div>
+          <div class="product-card__desc">
+            Real-time crypto and stock trading signals built for AI agents and algo traders.
+            50+ markets, 5 simultaneous timeframes, whale trade detection, short squeeze scanner,
+            order flow data, and momentum alerts. Agents discover, authenticate, and pay
+            autonomously via x402 on Base or Monad — no API key, no subscription. From $0.01/call.
+          </div>
+          <a href="https://nurse2web3.com/HedgeAlphaOracle/" target="_blank" rel="noopener" class="product-card__link">View Product &rarr;</a>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__corner"></div>
+          <div class="product-card__icon">&#x1F4C8;</div>
+          <div class="product-card__name">EventAlphaOracle</div>
+          <div class="product-card__tag">Live API &middot; Prediction Markets &middot; x402</div>
+          <div class="product-card__desc">
+            Real-time prediction market API delivering edge signals across NBA, NFL,
+            Boxing, MMA, and politics. Aggregates odds from 40+ sportsbooks, compares
+            public probability vs Vegas lines, and identifies value opportunities.
+            Under 500ms response. AI agent ready via x402 — from $0.10/signal.
+          </div>
+          <a href="https://nurse2web3.com/eventalphaoraclecode/" target="_blank" rel="noopener" class="product-card__link">View Product &rarr;</a>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__corner"></div>
+          <div class="product-card__icon">&#x1F4CA;</div>
+          <div class="product-card__name">CodeChart</div>
+          <div class="product-card__tag">Code Blue Support Tool &middot; $24.99 One-Time</div>
+          <div class="product-card__desc">
+            Fast-access clinical support tool for Code Blue events. ACLS pathways,
+            medication dosing reference, cardiac arrest checklists, rapid response
+            protocols, post-resuscitation care, and team communication framework.
+            Organizational support tool only &mdash; does not replace ACLS certification,
+            clinical judgement, or physician orders. No patient data. No HIPAA concerns.
+          </div>
+          <a href="https://nurse2web3.gumroad.com" target="_blank" rel="noopener" class="product-card__link">Get CodeChart &rarr;</a>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__corner"></div>
+          <div class="product-card__icon">&#x23F1;</div>
+          <div class="product-card__name">20-Second AI Trade Filter</div>
+          <div class="product-card__tag">Decision Checklist</div>
+          <div class="product-card__desc">
+            A 20-second checklist that reduces impulsive entries, price chasing,
+            and underestimated downside risk. Instead of asking "will this go up?" —
+            it asks "is this a disciplined decision right now?" Catches trades
+            that need more patience before you pull the trigger.
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__corner"></div>
+          <div class="product-card__icon">&#x1F9E0;</div>
+          <div class="product-card__name">Rational Investor Decision System&trade;</div>
+          <div class="product-card__tag">Risk-First Framework &middot; AI-Compatible</div>
+          <div class="product-card__desc">
+            A risk-first decision framework for investors and prediction-market participants.
+            Evaluates probability, uncertainty, and timing — not price predictions.
+            Structured prompts work inside ChatGPT, Claude, or Perplexity. Assesses whether
+            market expectations are early or overconfident, and what info would change the odds.
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-card__corner"></div>
+          <div class="product-card__icon">&#x1F916;</div>
+          <div class="product-card__name">#AI AgentLab</div>
+          <div class="product-card__tag">AI Comparison Platform</div>
+          <div class="product-card__desc">
+            Side-by-side AI model comparison for founders and developers. Test one prompt
+            across multiple models — compare output quality, speed, token usage, and cost
+            in a single view. Built-in scoring ranks a clear winner. Save results, track
+            over time, export as CSV or PDF.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ EVENTS ═══════ -->
+  <section class="section section__border-top" id="events">
+    <div class="events">
+      <div class="section__label reveal">// Upcoming</div>
+      <h2 class="section__heading reveal">
+        What's <em>next</em>
+      </h2>
+
+      <div class="event-card reveal">
+        <div class="event__date">
+          <div class="event__month">Apr</div>
+          <div class="event__day">05</div>
+        </div>
+        <div class="event__info">
+          <h3>Crypto for Your Mom — Episode 1</h3>
+          <p>YouTube series premiere. Crypto education designed for complete beginners — the way you'd explain it to someone you love.</p>
+        </div>
+        <div class="event__badge">YouTube Launch</div>
+      </div>
+
+      <div class="event-card reveal">
+        <div class="event__date">
+          <div class="event__month">Apr</div>
+          <div class="event__day">TBD</div>
+        </div>
+        <div class="event__info">
+          <h3>Nursing &amp; Finance Community Group</h3>
+          <p>A new community for healthcare workers who want to learn about investing, crypto, and building wealth beyond the bedside. More details coming soon.</p>
+        </div>
+        <div class="event__badge">Coming Soon</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ AI SUPPORT ═══════ -->
+  <section class="section section__border-top" id="ai-support">
+    <div class="ai-support">
+      <div class="section__label reveal">// AI Support</div>
+      <h2 class="section__heading reveal">
+        Got a <em>question?</em>
+      </h2>
+      <p class="reveal" style="color: var(--text-secondary); font-weight: 300; max-width: 560px; margin: 0 auto; font-size: 1.2rem;">
+        Ask basic questions about crypto, blockchain, or AI. Powered by Nurse2Web3 — patient education meets Web3.
+      </p>
+
+      <div class="ai-chat reveal-scale">
+        <div class="ai-chat__header">
+          <div class="ai-chat__dot"></div>
+          <div class="ai-chat__status">Nurse2Web3 AI &mdash; Online</div>
+        </div>
+        <div class="ai-chat__messages" id="chatMessages">
+          <div class="ai-msg ai-msg--bot">
+            Hey! I'm Tally's AI assistant. Ask me anything about crypto basics, blockchain, or getting started with Web3. I keep it simple — no jargon, no hype. &#x1F44B;
+          </div>
+          <div class="ai-msg ai-msg--typing" id="typingIndicator">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="ai-chat__suggestions" id="chatSuggestions">
+          <button class="ai-chat__suggestion" data-q="What is Bitcoin?">What is Bitcoin?</button>
+          <button class="ai-chat__suggestion" data-q="How do I buy crypto?">How do I buy crypto?</button>
+          <button class="ai-chat__suggestion" data-q="What is a blockchain?">What is blockchain?</button>
+          <button class="ai-chat__suggestion" data-q="Is crypto safe?">Is crypto safe?</button>
+        </div>
+        <div class="ai-chat__input-area">
+          <input class="ai-chat__input" id="chatInput" type="text" placeholder="Ask about crypto, blockchain, AI..." />
+          <button class="ai-chat__send" id="chatSend">Send</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ SOCIAL LINKS ═══════ -->
+  <section class="section section__border-top" id="connect">
+    <div class="socials">
+      <div class="section__label reveal">// Connect</div>
+      <h2 class="section__heading reveal">
+        Find me <em>everywhere</em>
+      </h2>
+      <div class="socials__grid stagger-children reveal">
+        <a class="social-card" href="https://www.tiktok.com/@nurse2web3" target="_blank" rel="noopener">
+          <div class="social-card__icon">&#x266B;</div>
+          <div class="social-card__name">TikTok</div>
+          <div class="social-card__handle">@nurse2web3</div>
+        </a>
+        <a class="social-card" href="https://x.com/nurse2web3" target="_blank" rel="noopener">
+          <div class="social-card__icon">&#x2718;</div>
+          <div class="social-card__name">X</div>
+          <div class="social-card__handle">@nurse2web3</div>
+        </a>
+        <a class="social-card" href="https://www.linkedin.com/in/nurse2web3" target="_blank" rel="noopener">
+          <div class="social-card__icon">in</div>
+          <div class="social-card__name">LinkedIn</div>
+          <div class="social-card__handle">@nurse2web3</div>
+        </a>
+        <a class="social-card" href="https://www.youtube.com/@nurse2web3" target="_blank" rel="noopener">
+          <div class="social-card__icon">&#x25B6;</div>
+          <div class="social-card__name">YouTube</div>
+          <div class="social-card__handle">@nurse2web3</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ EMAIL SIGNUP ═══════ -->
+  <section class="section section__border-top" id="signup">
+    <div class="email-signup reveal">
+      <div class="section__label">// Stay in the Loop</div>
+      <h2 class="section__heading">
+        Get <em>weekly</em> drops
+      </h2>
+      <p style="color: var(--text-secondary); font-weight: 300; font-size: 1.15rem;">
+        Crypto education, AI updates, and behind-the-scenes from a nurse building in Web3. No spam. Unsubscribe anytime.
+      </p>
+      <form class="email-signup__form" id="signupForm">
+        <input class="email-signup__input" id="signupEmail" type="email" placeholder="Enter your email address" required />
+        <button class="email-signup__btn" type="submit" id="signupBtn">Subscribe</button>
+      </form>
+      <div class="email-signup__note" id="signupNote">Join the Nurse2Web3 community. Your email is never shared.</div>
+      <script>
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          const email = document.getElementById('signupEmail').value.trim();
+          const btn = document.getElementById('signupBtn');
+          const note = document.getElementById('signupNote');
+          if (!email) return;
+          btn.textContent = 'Subscribing...';
+          btn.disabled = true;
+          try {
+            const res = await fetch('https://cryptosafe-nine.vercel.app/api/newsletter', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            if (data.success) {
+              note.textContent = "You're in! Check your inbox.";
+              note.style.color = '#00e6cc';
+              document.getElementById('signupEmail').value = '';
+            } else {
+              note.textContent = data.error || 'Something went wrong. Try again.';
+              note.style.color = '#ff5252';
+            }
+          } catch {
+            note.textContent = 'Something went wrong. Try again.';
+            note.style.color = '#ff5252';
+          }
+          btn.textContent = 'Subscribe';
+          btn.disabled = false;
+        });
+      </script>
+    </div>
+  </section>
+
+  <!-- ═══════ DISCLAIMER ═══════ -->
+  <div class="disclaimer">
+    <div class="disclaimer__text">
+      <strong>Disclaimer:</strong> The content provided by Nurse2Web3, including but not limited to social media posts, website content, AI chatbot responses, videos, and educational materials, is for <strong>informational and educational purposes only</strong>. <strong>This is not financial advice.</strong> Nothing on this site or any Nurse2Web3 platform constitutes financial advice, investment advice, trading advice, or any other type of professional advice. <strong>Natalia Wright (Tally) is not a financial advisor, broker, or dealer.</strong> Cryptocurrency and digital assets are highly volatile and carry significant risk — you could lose some or all of your investment. Always do your own research (DYOR) and consult with a qualified financial advisor before making any investment decisions. Nurse2Web3 does not guarantee the accuracy, completeness, or timeliness of any information presented. Past performance does not indicate future results. By using this site, you acknowledge that you are solely responsible for your own financial decisions.
+    </div>
+  </div>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand-section">
+        <div class="footer__brand">Nurse2Web3</div>
+        <div class="footer__tagline">From Bedside to Blockchain</div>
+        <div class="footer__desc">
+          Crypto &amp; AI education for beginners. Built by an ER nurse who believes financial literacy is a form of patient care.
+        </div>
+      </div>
+      <div class="footer__nav">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#events">Events</a></li>
+          <li><a href="#ai-support">AI Support</a></li>
+        </ul>
+      </div>
+      <div class="footer__social">
+        <h4>Follow</h4>
+        <div class="footer__social-links">
+          <a class="footer__social-link" href="https://www.tiktok.com/@nurse2web3" target="_blank" rel="noopener" title="TikTok">&#x266B;</a>
+          <a class="footer__social-link" href="https://x.com/nurse2web3" target="_blank" rel="noopener" title="X">&#x2718;</a>
+          <a class="footer__social-link" href="https://www.linkedin.com/in/nurse2web3" target="_blank" rel="noopener" title="LinkedIn">in</a>
+          <a class="footer__social-link" href="https://www.youtube.com/@nurse2web3" target="_blank" rel="noopener" title="YouTube">&#x25B6;</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <div class="footer__copy">&copy; 2026 Nurse2Web3. All rights reserved.</div>
+      <div class="footer__credit">Built by a nurse, powered by AI</div>
+    </div>
+  </footer>
+
+  <!-- ═══════ JAVASCRIPT ═══════ -->
+  <script>
+    // ── NAV SCROLL ──
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ── MOBILE NAV ──
+    const navToggle = document.getElementById('navToggle');
+    const navLinks = document.getElementById('navLinks');
+    navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+    navLinks.querySelectorAll('a').forEach(l => l.addEventListener('click', () => navLinks.classList.remove('open')));
+
+    // ── FLOATING PARTICLES ──
+    const hero = document.querySelector('.hero');
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (6 + Math.random() * 10) + 's';
+      p.style.animationDelay = (Math.random() * 8) + 's';
+      p.style.background = Math.random() > 0.5 ? 'var(--teal)' : 'var(--gold)';
+      p.style.boxShadow = Math.random() > 0.5
+        ? '0 0 6px var(--teal), 0 0 12px rgba(0,230,204,0.3)'
+        : '0 0 6px var(--gold), 0 0 12px rgba(212,168,83,0.3)';
+      p.style.width = (2 + Math.random() * 3) + 'px';
+      p.style.height = p.style.width;
+      hero.appendChild(p);
+    }
+
+    // ── SCROLL REVEAL ──
+    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger-children');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    // ── ECG ANIMATION ON SCROLL ──
+    const ecgBanner = document.getElementById('ecgBanner');
+    let ecgAnimated = false;
+
+    const ecgObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !ecgAnimated) {
+          ecgAnimated = true;
+
+          // Animate ECG lines
+          const ecgLines = document.querySelectorAll('.ecg-line');
+          ecgLines.forEach((line, i) => {
+            const len = line.getTotalLength ? line.getTotalLength() : 3000;
+            line.style.strokeDasharray = len;
+            line.style.strokeDashoffset = len;
+            line.style.transition = `stroke-dashoffset 2.5s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.15}s`;
+            setTimeout(() => { line.style.strokeDashoffset = '0'; }, 50);
+          });
+
+          // Animate candles after ECG
+          const candles = document.querySelectorAll('.candle');
+          candles.forEach((c, i) => {
+            setTimeout(() => {
+              c.style.transition = 'opacity 0.5s ease-out';
+              c.style.opacity = '1';
+              if (c.tagName === 'rect') {
+                c.style.transformOrigin = 'center bottom';
+                c.style.transition = 'opacity 0.5s ease-out, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+                c.style.transform = 'scaleY(1)';
+              }
+            }, 2000 + i * 120);
+          });
+
+          ecgObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    ecgObserver.observe(ecgBanner);
+
+    // ── SMOOTH PARALLAX ON GLOWS ──
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      document.querySelector('.glow--teal-top').style.transform = `translateY(${scrollY * 0.15}px)`;
+      document.querySelector('.glow--gold-right').style.transform = `translateY(${scrollY * -0.08}px)`;
+    });
+
+    // ── AI CHAT ──
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const chatSend = document.getElementById('chatSend');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const chatSuggestions = document.getElementById('chatSuggestions');
+
+    const responses = {
+      'bitcoin': "Bitcoin is digital money that works without a bank. Think of it like digital gold — there's a limited supply (only 21 million will ever exist), it's stored on a decentralized network, and you can send it to anyone in the world without a middleman. It was created in 2009 by someone using the name Satoshi Nakamoto.",
+      'buy crypto': "To buy crypto safely as a beginner:\n\n1. Start with a reputable exchange like Coinbase or Kraken\n2. Verify your identity (required by law)\n3. Connect your bank account\n4. Start small — only invest what you can afford to lose\n5. Consider dollar-cost averaging (buying a fixed amount regularly)\n\nNever share your private keys or seed phrase with anyone.",
+      'blockchain': "A blockchain is like a shared notebook that everyone can read but nobody can erase. Every transaction gets recorded in a \"block,\" and blocks are chained together in order. Think of it like your medical chart — every entry is timestamped, permanent, and verified. That's why it's trusted. No single person controls it.",
+      'safe': "Crypto itself is built on secure technology, but there are real risks:\n\n\u2022 Prices can drop significantly (volatility)\n\u2022 Scams exist — if it sounds too good to be true, it is\n\u2022 Lost passwords = lost money (no bank to call)\n\u2022 Only invest what you won't need tomorrow\n\nStart by learning before investing. That's literally why Nurse2Web3 exists.",
+      'wallet': "A crypto wallet is like a digital lockbox for your crypto. Two types:\n\n\u2022 Hot wallets (apps like MetaMask) — connected to the internet, convenient\n\u2022 Cold wallets (devices like Ledger) — offline, most secure\n\nYour wallet has a public address (safe to share) and a private key (NEVER share it).",
+      'defi': "DeFi = Decentralized Finance. Banking without the bank. You can lend, borrow, earn interest, and trade through code instead of institutions.\n\nTraditional finance is a hospital with gatekeepers. DeFi is telehealth — direct access, no waiting room. But you're responsible for your own care.",
+      'nft': "NFTs are digital proof of ownership — stored on the blockchain so they can't be faked. Think of it like a certificate of authenticity. The hype around NFT art has cooled, but the tech is being used for tickets, memberships, and more.",
+      'ethereum': "Ethereum is a blockchain platform. While Bitcoin is mainly digital money, Ethereum lets developers build apps on top of it. Think of Bitcoin as digital gold and Ethereum as a digital app store running on its own currency (ETH).",
+      'staking': "Staking is like putting your crypto in a savings account. You lock up coins to help secure a blockchain, and earn rewards. Passive income from crypto — but your coins are locked for a period.",
+    };
+
+    function findResponse(question) {
+      const q = question.toLowerCase();
+      if (q.includes('bitcoin') || q.includes('btc')) return responses['bitcoin'];
+      if (q.includes('buy') || q.includes('purchase') || q.includes('get started') || q.includes('start')) return responses['buy crypto'];
+      if (q.includes('blockchain') || q.includes('block chain')) return responses['blockchain'];
+      if (q.includes('safe') || q.includes('risk') || q.includes('secure') || q.includes('scam')) return responses['safe'];
+      if (q.includes('wallet') || q.includes('metamask') || q.includes('ledger')) return responses['wallet'];
+      if (q.includes('defi') || q.includes('decentralized finance')) return responses['defi'];
+      if (q.includes('nft')) return responses['nft'];
+      if (q.includes('ethereum') || q.includes('eth')) return responses['ethereum'];
+      if (q.includes('stak')) return responses['staking'];
+      if (q.includes('tally') || q.includes('nurse') || q.includes('who are you') || q.includes('about')) {
+        return "I'm Tally's AI assistant! Tally (Natalia Wright, MSN, RN) is an ER nurse turned crypto educator. She breaks down crypto, blockchain, and AI for beginners — no jargon, no hype. Follow @nurse2web3 on all platforms to learn more.";
+      }
+      if (q.includes('hello') || q.includes('hi') || q.includes('hey')) {
+        return "Hey! Welcome to Nurse2Web3. What do you want to learn about? I can explain crypto basics, blockchain, wallets, DeFi, and more — all in plain language.";
+      }
+      return "Great question! That goes a bit beyond my basics here, but Tally covers topics like this on her platforms. Follow @nurse2web3 on TikTok, YouTube, LinkedIn, and X for daily crypto and AI education. Try asking about Bitcoin, blockchain, wallets, DeFi, or how to buy crypto!";
+    }
+
+    function addMessage(text, isUser) {
+      const msg = document.createElement('div');
+      msg.className = `ai-msg ai-msg--${isUser ? 'user' : 'bot'}`;
+      msg.textContent = text;
+      chatMessages.insertBefore(msg, typingIndicator);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function handleSend() {
+      const question = chatInput.value.trim();
+      if (!question) return;
+      addMessage(question, true);
+      chatInput.value = '';
+      chatSuggestions.style.display = 'none';
+      typingIndicator.style.display = 'block';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      setTimeout(() => {
+        typingIndicator.style.display = 'none';
+        addMessage(findResponse(question), false);
+      }, 800 + Math.random() * 700);
+    }
+
+    chatSend.addEventListener('click', handleSend);
+    chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleSend(); });
+    document.querySelectorAll('.ai-chat__suggestion').forEach(btn => {
+      btn.addEventListener('click', () => {
+        chatInput.value = btn.dataset.q;
+        handleSend();
+      });
+    });
+  </script>
+</body>
+</html>

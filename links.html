@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nurse2Web3 — Links</title>
+  <meta name="description" content="All links from Nurse2Web3 — CryptoSafe scanner, Crypto Dictionary, products, newsletter, and social media." />
+  <meta property="og:title" content="Nurse2Web3 — Links" />
+  <meta property="og:description" content="CryptoSafe token scanner, free Crypto Dictionary, and more from your nurse2web3 educator." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #050a12;
+      --card: #0d1528;
+      --card-hover: #111d35;
+      --gold: #d4a853;
+      --gold-bright: #f0cc6a;
+      --teal: #00e6cc;
+      --green: #22c55e;
+      --red: #ef4444;
+      --text: #eae6de;
+      --text2: #8e99ae;
+      --border: rgba(0,230,204,0.12);
+      --border-gold: rgba(212,168,83,0.3);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 60px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .profile {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 16px;
+    }
+    .name {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .handle {
+      color: var(--teal);
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+    .tagline {
+      color: var(--gold);
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    .links {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 16px;
+      margin-bottom: -4px;
+      padding-left: 4px;
+    }
+
+    .link-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.25s ease;
+    }
+    .link-btn:hover {
+      background: var(--card-hover);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .link-btn .icon {
+      font-size: 22px;
+      width: 32px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .link-btn .label {
+      flex: 1;
+    }
+    .link-btn .sub {
+      font-size: 12px;
+      color: var(--text2);
+      display: block;
+      margin-top: 2px;
+    }
+    .link-btn .badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      flex-shrink: 0;
+    }
+    .badge-free {
+      background: rgba(34,197,94,0.15);
+      color: var(--green);
+      border: 1px solid rgba(34,197,94,0.3);
+    }
+    .badge-new {
+      background: rgba(212,168,83,0.15);
+      color: var(--gold);
+      border: 1px solid var(--border-gold);
+    }
+    .badge-price {
+      background: rgba(0,230,204,0.1);
+      color: var(--teal);
+      border: 1px solid rgba(0,230,204,0.2);
+    }
+
+    /* Featured card */
+    .featured {
+      border: 2px solid var(--border-gold);
+      background: linear-gradient(180deg, rgba(212,168,83,0.08), var(--card));
+      position: relative;
+    }
+    .featured::before {
+      content: 'FEATURED';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      background: var(--gold);
+      color: #000;
+      padding: 2px 12px;
+      border-radius: 10px;
+    }
+
+    .socials {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+    .social-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--text2);
+      text-decoration: none;
+      transition: all 0.25s ease;
+    }
+    .social-btn:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      transform: translateY(-2px);
+    }
+
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      color: var(--text2);
+      font-size: 13px;
+    }
+    .footer a { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <div class="profile">
+    <div class="avatar">🩺</div>
+    <div class="name">Tally | Nurse2Web3</div>
+    <div class="handle">@nurse2web3</div>
+    <div class="tagline">From Bedside to Blockchain</div>
+  </div>
+
+  <div class="links">
+
+    <!-- CryptoSafe -->
+    <div class="section-label">Crypto Safety</div>
+
+    <a href="https://cryptosafe-nine.vercel.app" class="link-btn featured" target="_blank">
+      <span class="icon">🛡️</span>
+      <span class="label">
+        CryptoSafe — Token Scanner
+        <span class="sub">Scan any token for scams in 10 seconds</span>
+      </span>
+      <span class="badge badge-free">FREE SCAN</span>
+    </a>
+
+    <a href="https://cryptosafe-nine.vercel.app/learn/dictionary" class="link-btn" target="_blank">
+      <span class="icon">📖</span>
+      <span class="label">
+        Crypto Dictionary
+        <span class="sub">30 terms + quizzes + matching games</span>
+      </span>
+      <span class="badge badge-free">FREE</span>
+    </a>
+
+    <a href="https://cryptosafe-nine.vercel.app/learn/before-you-buy" class="link-btn" target="_blank">
+      <span class="icon">✅</span>
+      <span class="label">
+        Before You Buy Checklist
+        <span class="sub">10 steps before putting money in any token</span>
+      </span>
+    </a>
+
+    <!-- Products -->
+    <div class="section-label">Tools I Built</div>
+
+    <a href="https://cryptosafe-nine.vercel.app/pricing" class="link-btn" target="_blank">
+      <span class="icon">🔓</span>
+      <span class="label">
+        CryptoSafe Lifetime Access
+        <span class="sub">Unlimited scans, watchlist, AI analyzer, PDF reports</span>
+      </span>
+      <span class="badge badge-price">$29</span>
+    </a>
+
+    <a href="https://nurse2web3.gumroad.com/l/shawgo" class="link-btn" target="_blank">
+      <span class="icon">⚡</span>
+      <span class="label">
+        20-Second AI Trade Filter
+        <span class="sub">Quick decision tool for any trade</span>
+      </span>
+    </a>
+
+    <a href="https://nurse2web3.gumroad.com/l/puljan" class="link-btn" target="_blank">
+      <span class="icon">🧠</span>
+      <span class="label">
+        Rational Investor Decision System
+        <span class="sub">Remove emotion from investing decisions</span>
+      </span>
+    </a>
+
+    <!-- Newsletter -->
+    <div class="section-label">Stay Connected</div>
+
+    <a href="https://cryptosafe-nine.vercel.app/#newsletter" class="link-btn" target="_blank">
+      <span class="icon">📬</span>
+      <span class="label">
+        Nurse2Web3 Weekly Newsletter
+        <span class="sub">Crypto education + scam alerts every Friday</span>
+      </span>
+      <span class="badge badge-free">FREE</span>
+    </a>
+
+    <a href="https://cryptosafe-nine.vercel.app/compare-tools" class="link-btn" target="_blank">
+      <span class="icon">⚖️</span>
+      <span class="label">
+        CryptoSafe vs Other Scanners
+        <span class="sub">See how we compare</span>
+      </span>
+      <span class="badge badge-new">NEW</span>
+    </a>
+
+  </div>
+
+  <!-- Social icons -->
+  <div class="socials">
+    <a href="https://tiktok.com/@nurse2web3" class="social-btn" target="_blank" title="TikTok">🎵</a>
+    <a href="https://x.com/nurse2web3" class="social-btn" target="_blank" title="X">𝕏</a>
+    <a href="https://linkedin.com/in/nurse2web3" class="social-btn" target="_blank" title="LinkedIn">💼</a>
+    <a href="https://youtube.com/@nurse2web3" class="social-btn" target="_blank" title="YouTube">▶️</a>
+    <a href="https://reddit.com/r/nurse2web3" class="social-btn" target="_blank" title="Reddit">🟠</a>
+  </div>
+
+  <div class="footer">
+    <p>MSN, RN — ER Nurse turned Crypto Educator</p>
+    <p><a href="https://nurse2web3.github.io">nurse2web3.com</a></p>
+  </div>
+
+</body>
+</html>
