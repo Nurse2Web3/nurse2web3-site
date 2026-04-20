@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nurse2Web3 — From Bedside to Blockchain</title>
   <meta name="description" content="Natalia Wright MSN, RN — Crypto educator, Web3 builder, and the bridge between healthcare and blockchain." />
+  <meta property="og:title" content="Nurse2Web3 — From Bedside to Blockchain" />
+  <meta property="og:description" content="Natalia Wright MSN, RN — Crypto educator, Web3 builder, and the bridge between healthcare and blockchain." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nurse2web3.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -531,6 +535,7 @@
       position: relative;
       overflow: hidden;
       transition: all 0.5s var(--ease-out-expo);
+      cursor: pointer;
     }
 
     .product-card::before {
@@ -623,6 +628,192 @@
       color: var(--gold-bright);
       border-color: var(--gold);
       padding-left: 8px;
+    }
+
+    /* ══════ PRODUCT FILTER ══════ */
+    .product-filters {
+      display: flex;
+      gap: 0;
+      margin-top: 32px;
+      margin-bottom: 40px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .product-filter {
+      flex: 1;
+      padding: 18px 20px;
+      background: transparent;
+      color: var(--text-secondary);
+      border: none;
+      border-right: 1px solid var(--border);
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-out-expo);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+    }
+
+    .product-filter:last-child { border-right: none; }
+
+    .product-filter:hover {
+      background: rgba(0,230,204,0.04);
+      color: var(--text-primary);
+    }
+
+    .product-filter.active {
+      background: linear-gradient(135deg, rgba(0,230,204,0.12), rgba(212,168,83,0.08));
+      color: var(--teal);
+      border-color: rgba(0,230,204,0.2);
+    }
+
+    .product-filter__count {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .product-filter.active .product-filter__count {
+      color: var(--teal-dim);
+    }
+
+    .product-card.hidden {
+      display: none;
+    }
+
+    /* ══════ TICKER MARQUEE ══════ */
+    .ticker {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      padding: 16px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ticker__track {
+      display: flex;
+      gap: 48px;
+      white-space: nowrap;
+      animation: tickerScroll 60s linear infinite;
+    }
+
+    .ticker__item {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .ticker__key { color: var(--text-muted); }
+    .ticker__val { color: var(--text-primary); font-weight: 600; }
+    .ticker__delta--up { color: var(--candle-green); }
+    .ticker__delta--down { color: var(--candle-red); }
+    .ticker__delta--stable { color: var(--teal-dim); }
+    .ticker__sep { color: var(--border); font-size: 0.6rem; }
+
+    @keyframes tickerScroll {
+      to { transform: translateX(-33.333%); }
+    }
+
+    /* ══════ FIELD NOTES ══════ */
+    .notes { max-width: 1300px; margin: 0 auto; }
+
+    .notes__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-top: 56px;
+      border: 1px solid var(--border);
+    }
+
+    .note-card {
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: all 0.4s var(--ease-out-expo);
+      text-decoration: none;
+      color: inherit;
+      position: relative;
+    }
+
+    .note-card:nth-child(1),
+    .note-card:nth-child(2) {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .note-card:nth-child(odd) {
+      border-right: 1px solid var(--border);
+    }
+
+    .note-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--teal), var(--gold));
+      transform: scaleY(0);
+      transition: transform 0.4s var(--ease-out-expo);
+    }
+
+    .note-card:hover {
+      background: var(--bg-card);
+    }
+
+    .note-card:hover::before {
+      transform: scaleY(1);
+    }
+
+    .note-card__meta {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .note-card__num,
+    .note-card__len {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+    }
+
+    .note-card__title {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+
+    .note-card__cta {
+      margin-top: auto;
+      font-size: 0.95rem;
+      color: var(--teal);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s;
+    }
+
+    .note-card:hover .note-card__cta {
+      color: var(--gold-bright);
+      gap: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .product-filters { flex-direction: column; }
+      .product-filter { border-right: none; border-bottom: 1px solid var(--border); }
+      .product-filter:last-child { border-bottom: none; }
+      .notes__grid { grid-template-columns: 1fr; }
+      .note-card:nth-child(odd) { border-right: none; }
+      .note-card:nth-child(2) { border-bottom: 1px solid var(--border); }
+      .note-card:nth-child(3) { border-bottom: 1px solid var(--border); }
     }
 
     /* ══════ EVENTS ══════ */
@@ -1248,6 +1439,7 @@
       <li><a href="#about">About</a></li>
       <li><a href="#products">Products</a></li>
       <li><a href="#events">Events</a></li>
+      <li><a href="#notes">Notes</a></li>
       <li><a href="#ai-support">Support</a></li>
       <li><a href="#connect">Connect</a></li>
     </ul>
@@ -1389,6 +1581,38 @@
     </svg>
   </div>
 
+  <!-- ═══════ LIVE TICKER ═══════ -->
+  <div class="ticker">
+    <div class="ticker__track" id="tickerTrack">
+      <span class="ticker__item"><span class="ticker__key">BTC</span><span class="ticker__val">$68,412</span><span class="ticker__delta--up">+1.2%</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">ETH</span><span class="ticker__val">$3,284</span><span class="ticker__delta--down">-0.4%</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">HR</span><span class="ticker__val">72 BPM</span><span class="ticker__delta--stable">NSR</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">SpO₂</span><span class="ticker__val">99%</span><span class="ticker__delta--stable">STABLE</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">BP</span><span class="ticker__val">118/76</span><span class="ticker__delta--stable">WNL</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">SOL</span><span class="ticker__val">$162</span><span class="ticker__delta--up">+3.8%</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">LINK</span><span class="ticker__val">$18.40</span><span class="ticker__delta--up">+2.1%</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">XRP</span><span class="ticker__val">$0.62</span><span class="ticker__delta--up">+0.8%</span></span><span class="ticker__sep">◆</span>
+      <!-- duplicated for seamless loop -->
+      <span class="ticker__item"><span class="ticker__key">BTC</span><span class="ticker__val">$68,412</span><span class="ticker__delta--up">+1.2%</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">ETH</span><span class="ticker__val">$3,284</span><span class="ticker__delta--down">-0.4%</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">HR</span><span class="ticker__val">72 BPM</span><span class="ticker__delta--stable">NSR</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">SpO₂</span><span class="ticker__val">99%</span><span class="ticker__delta--stable">STABLE</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">BP</span><span class="ticker__val">118/76</span><span class="ticker__delta--stable">WNL</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">SOL</span><span class="ticker__val">$162</span><span class="ticker__delta--up">+3.8%</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">LINK</span><span class="ticker__val">$18.40</span><span class="ticker__delta--up">+2.1%</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">XRP</span><span class="ticker__val">$0.62</span><span class="ticker__delta--up">+0.8%</span></span><span class="ticker__sep">◆</span>
+      <!-- third copy -->
+      <span class="ticker__item"><span class="ticker__key">BTC</span><span class="ticker__val">$68,412</span><span class="ticker__delta--up">+1.2%</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">ETH</span><span class="ticker__val">$3,284</span><span class="ticker__delta--down">-0.4%</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">HR</span><span class="ticker__val">72 BPM</span><span class="ticker__delta--stable">NSR</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">SpO₂</span><span class="ticker__val">99%</span><span class="ticker__delta--stable">STABLE</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">BP</span><span class="ticker__val">118/76</span><span class="ticker__delta--stable">WNL</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">SOL</span><span class="ticker__val">$162</span><span class="ticker__delta--up">+3.8%</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">LINK</span><span class="ticker__val">$18.40</span><span class="ticker__delta--up">+2.1%</span></span><span class="ticker__sep">◆</span>
+      <span class="ticker__item"><span class="ticker__key">XRP</span><span class="ticker__val">$0.62</span><span class="ticker__delta--up">+0.8%</span></span><span class="ticker__sep">◆</span>
+    </div>
+  </div>
+
   <!-- ═══════ ABOUT ═══════ -->
   <section class="section section__border-top" id="about">
     <div class="about">
@@ -1427,7 +1651,7 @@
             <div class="stat__label">Clinical Experience</div>
           </div>
           <div class="stat">
-            <div class="stat__number">6+</div>
+            <div class="stat__number">7+</div>
             <div class="stat__label">Products Shipped</div>
           </div>
           <div class="stat">
@@ -1446,8 +1670,27 @@
       <h2 class="section__heading reveal">
         Built with AI. <em>Shipped</em> for real.
       </h2>
+      <div class="product-filters reveal">
+        <button class="product-filter active" data-filter="all">
+          <span class="product-filter__count">FILTER · 07</span>
+          All products
+        </button>
+        <button class="product-filter" data-filter="devs">
+          <span class="product-filter__count">FILTER · 03</span>
+          For developers
+        </button>
+        <button class="product-filter" data-filter="beginners">
+          <span class="product-filter__count">FILTER · 03</span>
+          For beginners
+        </button>
+        <button class="product-filter" data-filter="nurses">
+          <span class="product-filter__count">FILTER · 01</span>
+          For nurses
+        </button>
+      </div>
+
       <div class="products__grid stagger-children reveal">
-        <div class="product-card">
+        <div class="product-card" data-audience="devs">
           <div class="product-card__corner"></div>
           <div class="product-card__icon">&#x26A1;</div>
           <div class="product-card__name">HedgeAlphaOracle</div>
@@ -1458,10 +1701,10 @@
             order flow data, and momentum alerts. Agents discover, authenticate, and pay
             autonomously via x402 on Base or Monad — no API key, no subscription. From $0.01/call.
           </div>
-          <a href="https://nurse2web3.com/HedgeAlphaOracle/" target="_blank" rel="noopener" class="product-card__link">View Product &rarr;</a>
+          <a href="/HedgeAlphaOracle/" class="product-card__link">View Product &rarr;</a>
         </div>
 
-        <div class="product-card">
+        <div class="product-card" data-audience="devs">
           <div class="product-card__corner"></div>
           <div class="product-card__icon">&#x1F4C8;</div>
           <div class="product-card__name">EventAlphaOracle</div>
@@ -1472,10 +1715,10 @@
             public probability vs Vegas lines, and identifies value opportunities.
             Under 500ms response. AI agent ready via x402 — from $0.10/signal.
           </div>
-          <a href="https://nurse2web3.com/eventalphaoraclecode/" target="_blank" rel="noopener" class="product-card__link">View Product &rarr;</a>
+          <a href="/eventalphaoraclecode/" class="product-card__link">View Product &rarr;</a>
         </div>
 
-        <div class="product-card">
+        <div class="product-card" data-audience="nurses">
           <div class="product-card__corner"></div>
           <div class="product-card__icon">&#x1F4CA;</div>
           <div class="product-card__name">CodeChart</div>
@@ -1487,10 +1730,24 @@
             Organizational support tool only &mdash; does not replace ACLS certification,
             clinical judgement, or physician orders. No patient data. No HIPAA concerns.
           </div>
-          <a href="https://nurse2web3.gumroad.com" target="_blank" rel="noopener" class="product-card__link">Get CodeChart &rarr;</a>
+          <a href="/codechart/" class="product-card__link">View CodeChart &rarr;</a>
         </div>
 
-        <div class="product-card">
+        <div class="product-card" data-audience="beginners">
+          <div class="product-card__corner"></div>
+          <div class="product-card__icon">&#x1F6E1;</div>
+          <div class="product-card__name">CryptoSafe</div>
+          <div class="product-card__tag">Token Scanner &middot; 6 Chains &middot; $29 Lifetime</div>
+          <div class="product-card__desc">
+            Crypto token scanner built for beginners. Paste any token address and get a risk score (1-100),
+            honeypot detection, pig butchering pattern alerts, and plain English red flag cards.
+            Covers Ethereum, BSC, Solana, Polygon, Arbitrum, and Base. AI scam message analyzer,
+            token comparison, watchlist, and PDF reports included. 1 free scan to try.
+          </div>
+          <a href="https://cryptosafe.nurse2web3.com/" target="_blank" rel="noopener" class="product-card__link">Try CryptoSafe &rarr;</a>
+        </div>
+
+        <div class="product-card" data-audience="beginners">
           <div class="product-card__corner"></div>
           <div class="product-card__icon">&#x23F1;</div>
           <div class="product-card__name">20-Second AI Trade Filter</div>
@@ -1501,9 +1758,10 @@
             it asks "is this a disciplined decision right now?" Catches trades
             that need more patience before you pull the trigger.
           </div>
+          <a href="/tradefilter/" class="product-card__link">Learn More &rarr;</a>
         </div>
 
-        <div class="product-card">
+        <div class="product-card" data-audience="beginners">
           <div class="product-card__corner"></div>
           <div class="product-card__icon">&#x1F9E0;</div>
           <div class="product-card__name">Rational Investor Decision System&trade;</div>
@@ -1514,9 +1772,10 @@
             Structured prompts work inside ChatGPT, Claude, or Perplexity. Assesses whether
             market expectations are early or overconfident, and what info would change the odds.
           </div>
+          <a href="/rids/" class="product-card__link">Learn More &rarr;</a>
         </div>
 
-        <div class="product-card">
+        <div class="product-card" data-audience="devs">
           <div class="product-card__corner"></div>
           <div class="product-card__icon">&#x1F916;</div>
           <div class="product-card__name">#AI AgentLab</div>
@@ -1527,6 +1786,7 @@
             in a single view. Built-in scoring ranks a clear winner. Save results, track
             over time, export as CSV or PDF.
           </div>
+          <a href="/agentlab/" class="product-card__link">View AgentLab &rarr;</a>
         </div>
       </div>
     </div>
@@ -1543,7 +1803,7 @@
       <div class="event-card reveal">
         <div class="event__date">
           <div class="event__month">Apr</div>
-          <div class="event__day">05</div>
+          <div class="event__day">26</div>
         </div>
         <div class="event__info">
           <h3>Crypto for Your Mom — Episode 1</h3>
@@ -1554,7 +1814,7 @@
 
       <div class="event-card reveal">
         <div class="event__date">
-          <div class="event__month">Apr</div>
+          <div class="event__month">May</div>
           <div class="event__day">TBD</div>
         </div>
         <div class="event__info">
@@ -1562,6 +1822,62 @@
           <p>A new community for healthcare workers who want to learn about investing, crypto, and building wealth beyond the bedside. More details coming soon.</p>
         </div>
         <div class="event__badge">Coming Soon</div>
+      </div>
+
+      <div class="event-card reveal">
+        <div class="event__date">
+          <div class="event__month">Jun</div>
+          <div class="event__day">—</div>
+        </div>
+        <div class="event__info">
+          <h3>x402 for Non-Coders Workshop</h3>
+          <p>Ship your first agent-monetizable API without writing production code. Learn the payment rail that lets AI agents pay for data autonomously.</p>
+        </div>
+        <div class="event__badge">Planned</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ FIELD NOTES ═══════ -->
+  <section class="section section__border-top" id="notes">
+    <div class="notes">
+      <div class="section__label reveal">// Field Notes</div>
+      <h2 class="section__heading reveal">
+        Essays from the <em>crossover</em>
+      </h2>
+      <div class="notes__grid stagger-children reveal">
+        <a class="note-card" href="#">
+          <div class="note-card__meta">
+            <span class="note-card__num">N° 001 · 04.12.26</span>
+            <span class="note-card__len">4 min</span>
+          </div>
+          <div class="note-card__title">Why I teach crypto like I'd teach a patient</div>
+          <div class="note-card__cta">Read <span>→</span></div>
+        </a>
+        <a class="note-card" href="#">
+          <div class="note-card__meta">
+            <span class="note-card__num">N° 002 · 04.03.26</span>
+            <span class="note-card__len">7 min</span>
+          </div>
+          <div class="note-card__title">x402: the payment rail for AI agents, explained</div>
+          <div class="note-card__cta">Read <span>→</span></div>
+        </a>
+        <a class="note-card" href="#">
+          <div class="note-card__meta">
+            <span class="note-card__num">N° 003 · 03.24.26</span>
+            <span class="note-card__len">3 min</span>
+          </div>
+          <div class="note-card__title">From code cart to code repo</div>
+          <div class="note-card__cta">Read <span>→</span></div>
+        </a>
+        <a class="note-card" href="#">
+          <div class="note-card__meta">
+            <span class="note-card__num">N° 004 · 03.11.26</span>
+            <span class="note-card__len">5 min</span>
+          </div>
+          <div class="note-card__title">What nurses already know about risk</div>
+          <div class="note-card__cta">Read <span>→</span></div>
+        </a>
       </div>
     </div>
   </section>
@@ -1709,6 +2025,7 @@
           <li><a href="#about">About</a></li>
           <li><a href="#products">Products</a></li>
           <li><a href="#events">Events</a></li>
+          <li><a href="#notes">Field Notes</a></li>
           <li><a href="#ai-support">AI Support</a></li>
         </ul>
       </div>
@@ -1815,6 +2132,33 @@
       const scrollY = window.scrollY;
       document.querySelector('.glow--teal-top').style.transform = `translateY(${scrollY * 0.15}px)`;
       document.querySelector('.glow--gold-right').style.transform = `translateY(${scrollY * -0.08}px)`;
+    });
+
+    // ── CLICKABLE PRODUCT CARDS ──
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('.product-card__link')) return; // let the link handle itself
+        const link = card.querySelector('.product-card__link');
+        if (link) window.location.href = link.href;
+      });
+    });
+
+    // ── PRODUCT FILTER ──
+    const filterBtns = document.querySelectorAll('.product-filter');
+    const productCards = document.querySelectorAll('.product-card');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const f = btn.dataset.filter;
+        productCards.forEach(card => {
+          if (f === 'all' || card.dataset.audience === f) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
     });
 
     // ── AI CHAT ──

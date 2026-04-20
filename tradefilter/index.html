@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>20-Second AI Trade Filter | Nurse2Web3</title>
+    <meta name="description" content="A free 20-second checklist that cuts impulsive entries and bad timing. Reframes trading decisions from emotion to discipline. Built for beginners.">
+    <meta name="keywords" content="trade filter, crypto checklist, trading discipline, FOMO, beginner investing, crypto trading, decision framework">
+    <meta name="author" content="Nurse2Web3">
+    <meta property="og:title" content="20-Second AI Trade Filter | Free Decision Framework">
+    <meta property="og:description" content="A free 20-second checklist that cuts impulsive entries and bad timing. Stop FOMOing into trades. Start making disciplined decisions.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nurse2web3.com/tradefilter">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="20-Second AI Trade Filter | Free from Nurse2Web3">
+    <meta name="twitter:description" content="A free 20-second checklist that cuts impulsive entries and bad timing. Built for beginners.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-deep: #050a12;
+            --bg-surface: #0a1020;
+            --bg-card: #0d1528;
+            --bg-card-hover: #111d35;
+            --gold: #d4a853;
+            --gold-bright: #f0cc6a;
+            --teal: #00e6cc;
+            --teal-mid: #00c8b4;
+            --teal-dim: #009e8e;
+            --text-primary: #eae6de;
+            --text-secondary: #8e99ae;
+            --text-muted: #4a5568;
+            --border: rgba(0,230,204,0.12);
+            --border-gold: rgba(212,168,83,0.2);
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'Outfit', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        .section-label {
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--teal);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.25;
+        }
+
+        .section-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin-bottom: 48px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-center .section-subtitle {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .highlight {
+            color: var(--gold);
+        }
+
+        .highlight-teal {
+            color: var(--teal);
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 24px 0;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--teal);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            padding-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -20%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(0,230,204,0.06) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -15%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(212,168,83,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(0,230,204,0.1);
+            border: 1px solid var(--border);
+            color: var(--teal);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.4rem, 5.5vw, 3.6rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 24px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 36px;
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 36px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.3px;
+            font-family: var(--font-body);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--teal), var(--teal-dim));
+            color: var(--bg-deep);
+            box-shadow: 0 4px 20px rgba(0,230,204,0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 28px rgba(0,230,204,0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-gold);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Problem section */
+        .problem {
+            background: var(--bg-surface);
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .problem-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .problem-list li {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .problem-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(212,168,83,0.1);
+            border: 1px solid var(--border-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+
+        .problem-list li p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .problem-list li strong {
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .problem-visual {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .problem-visual .big-stat {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .problem-visual h3 {
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .problem-visual p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Filter Steps */
+        .filter-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .filter-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 32px 28px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--teal), var(--gold));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .filter-card:hover {
+            border-color: rgba(0,230,204,0.25);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+            background: var(--bg-card-hover);
+        }
+
+        .filter-card:hover::before {
+            opacity: 1;
+        }
+
+        .filter-card-number {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--teal), var(--teal-dim));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--bg-deep);
+            margin-bottom: 16px;
+        }
+
+        .filter-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .filter-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Who it's for */
+        .audience {
+            background: var(--bg-surface);
+        }
+
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .audience-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px 24px;
+            transition: border-color 0.2s;
+        }
+
+        .audience-item:hover {
+            border-color: var(--teal);
+        }
+
+        .audience-check {
+            color: var(--teal);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+
+        .audience-item span {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        /* CTA */
+        .final-cta {
+            text-align: center;
+            padding: 80px 0;
+        }
+
+        .final-cta h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+            margin-bottom: 16px;
+        }
+
+        .final-cta p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            margin-bottom: 32px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-brand {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .footer-brand a {
+            color: var(--teal);
+            text-decoration: none;
+        }
+
+        .footer-brand a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            max-width: 500px;
+            text-align: right;
+            line-height: 1.5;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .footer-social a:hover {
+            color: var(--teal);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .problem-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 0;
+            }
+
+            .filter-steps {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+
+            .audience-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-disclaimer {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Back Link -->
+    <div class="container">
+        <a href="/" class="back-link">&larr; Back to Nurse2Web3</a>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">Free</div>
+                <h1>The <span class="highlight">20-Second</span> AI Trade Filter</h1>
+                <p>A quick decision checklist that cuts impulsive entries and bad timing. Reframes the question from "will this go up?" to "is this a disciplined decision right now?"</p>
+                <a href="#filter" class="btn btn-primary">See the Filter</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Problem -->
+    <section class="problem">
+        <div class="container">
+            <div class="section-label">The Problem</div>
+            <div class="section-title">Most beginner losses aren't from <span class="highlight">bad picks.</span><br>They're from bad timing.</div>
+            <div class="section-subtitle">You see a coin pumping. Your heart rate spikes. You hit buy. Ten minutes later you're down 12% and wondering what happened. Sound familiar?</div>
+            <div class="problem-grid">
+                <ul class="problem-list">
+                    <li>
+                        <span class="problem-icon">&#128680;</span>
+                        <div>
+                            <strong>FOMO is a strategy killer</strong>
+                            <p>Seeing green candles triggers an emotional response that bypasses rational thinking. You buy at the top because you're afraid of missing out, not because the setup is right.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="problem-icon">&#128200;</span>
+                        <div>
+                            <strong>Hype masquerades as opportunity</strong>
+                            <p>Social media buzz, influencer shills, and group chat excitement feel like signals. They're not. Most hype-driven entries end in drawdowns.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="problem-icon">&#129504;</span>
+                        <div>
+                            <strong>No exit plan means no discipline</strong>
+                            <p>If you don't know when you'd sell before you buy, you're gambling. Every impulsive entry without an exit plan is just hope with your money on the line.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="problem-icon">&#128176;</span>
+                        <div>
+                            <strong>Emotion is the most expensive indicator</strong>
+                            <p>Excitement, fear, boredom, revenge trading. All of these states lead to entries you'd never take with a clear head. You need a circuit breaker.</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="problem-visual">
+                    <div class="big-stat">20s</div>
+                    <h3>That's all it takes to catch a bad trade before you pull the trigger.</h3>
+                    <p>The filter isn't about saying no to every trade. It's about catching the ones that need more patience &mdash; the ones that would cost you money if you rushed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How the Filter Works -->
+    <section id="filter">
+        <div class="container">
+            <div class="text-center">
+                <div class="section-label">How It Works</div>
+                <div class="section-title">Five questions. <span class="highlight-teal">Twenty seconds.</span></div>
+                <div class="section-subtitle">Run every potential trade through these five questions before you execute. If you can't answer them clearly, the trade needs more time.</div>
+            </div>
+            <div class="filter-steps">
+                <div class="filter-card">
+                    <div class="filter-card-number">1</div>
+                    <h3>What's the trend?</h3>
+                    <p>Is price above or below the 20-day moving average? Are you trading with the trend or fighting it? If you don't know, you're guessing.</p>
+                </div>
+                <div class="filter-card">
+                    <div class="filter-card-number">2</div>
+                    <h3>Is there a catalyst or just hype?</h3>
+                    <p>Real catalysts: protocol upgrades, exchange listings, partnership announcements. Hype: influencer tweets, group chat pumps, "trust me bro." Know the difference.</p>
+                </div>
+                <div class="filter-card">
+                    <div class="filter-card-number">3</div>
+                    <h3>What's my exit plan?</h3>
+                    <p>Where do you take profit? Where do you cut the loss? If you can't name both numbers before you enter, you don't have a trade &mdash; you have a hope.</p>
+                </div>
+                <div class="filter-card">
+                    <div class="filter-card-number">4</div>
+                    <h3>Am I emotional right now?</h3>
+                    <p>Excitement, fear, boredom, revenge after a loss. Any of these states mean your judgment is compromised. A clear head makes clear decisions.</p>
+                </div>
+                <div class="filter-card">
+                    <div class="filter-card-number">5</div>
+                    <h3>Would I take this trade if I had to wait 24 hours?</h3>
+                    <p>If the answer is no, the trade is driven by urgency, not logic. Good setups don't expire in minutes. If it's a real opportunity, it'll still look good tomorrow.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who It's For -->
+    <section class="audience">
+        <div class="container">
+            <div class="text-center">
+                <div class="section-label">Who It's For</div>
+                <div class="section-title">Built for <span class="highlight">beginners</span> who are tired of learning the hard way</div>
+                <div class="section-subtitle">If you've ever hit buy and immediately regretted it, this filter was made for you.</div>
+            </div>
+            <div class="audience-grid">
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Beginners learning crypto trading</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>New investors who've lost money to FOMO</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Anyone who trades on emotion instead of logic</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>People who want a system, not just gut feelings</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Self-directed investors building discipline</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Anyone who's ever panic-bought a green candle</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Stop trading on <span class="highlight">impulse.</span><br>Start trading with <span class="highlight-teal">discipline.</span></h2>
+            <p>Five questions. Twenty seconds. Zero cost. The filter that catches the trades you'd regret.</p>
+            <a href="#" class="btn btn-primary">Start Using the Filter</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="/">Nurse2Web3</a> &mdash; From Bedside to Blockchain
+                </div>
+                <div class="footer-social">
+                    <a href="https://tiktok.com/@nurse2web3" target="_blank" rel="noopener">TikTok</a>
+                    <a href="https://x.com/nurse2web3" target="_blank" rel="noopener">X</a>
+                    <a href="https://linkedin.com/in/nurse2web3" target="_blank" rel="noopener">LinkedIn</a>
+                </div>
+            </div>
+            <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <p class="footer-disclaimer" style="text-align: center; max-width: 100%;">This is not financial advice. The 20-Second AI Trade Filter is an educational decision framework only. It does not guarantee profitable trades, predict market movements, or constitute investment advice. Always do your own research and only invest what you can afford to lose. Past performance does not indicate future results.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

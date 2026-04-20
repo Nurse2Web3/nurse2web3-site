@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HedgeAlphaOracle — Real-Time Trading Signals for AI Agents | Nurse2Web3</title>
+  <meta name="description" content="Real-time crypto & stock trading signals built for AI agents and algo traders. 50+ markets, 5 timeframes, whale detection, x402 pay-per-call on Base & Monad." />
+  <meta property="og:title" content="HedgeAlphaOracle — Trading Signals for AI Agents" />
+  <meta property="og:description" content="Real-time crypto & stock trading signals. 50+ markets, whale detection, short-squeeze scanner. Pay-per-call via x402 on Base or Monad." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nurse2web3.com/HedgeAlphaOracle" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="HedgeAlphaOracle — Trading Signals for AI Agents" />
+  <meta name="twitter:description" content="Real-time crypto & stock trading signals. 50+ markets, whale detection, short-squeeze scanner. Pay-per-call via x402." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep: #050a12;
+      --bg-surface: #0a1020;
+      --bg-card: #0d1528;
+      --bg-card-hover: #111d35;
+      --gold: #d4a853;
+      --gold-bright: #f0cc6a;
+      --gold-dim: #8a7234;
+      --teal: #00e6cc;
+      --teal-mid: #00c8b4;
+      --teal-dim: #009e8e;
+      --teal-glow: rgba(0,230,204,0.4);
+      --candle-green: #00e676;
+      --candle-red: #ff5252;
+      --text-primary: #eae6de;
+      --text-secondary: #8e99ae;
+      --text-muted: #4a5568;
+      --border: rgba(0,230,204,0.12);
+      --border-gold: rgba(212,168,83,0.2);
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Outfit', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: rgba(0,230,204,0.3); color: #fff; }
+
+    a { color: var(--teal); text-decoration: none; transition: all 0.3s; }
+    a:hover { color: var(--gold-bright); }
+
+    /* Noise overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.02;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+    }
+
+    /* Ambient glows */
+    .glow {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      border-radius: 50%;
+      filter: blur(140px);
+    }
+    .glow--teal-top { width: 700px; height: 700px; top: -250px; left: -100px; background: rgba(0,230,204,0.08); }
+    .glow--gold-right { width: 600px; height: 600px; top: 30%; right: -200px; background: rgba(212,168,83,0.06); }
+    .glow--teal-bottom { width: 800px; height: 800px; bottom: -300px; left: 30%; background: rgba(0,230,204,0.05); }
+
+    /* Layout */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Back link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 120px 0 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--teal-mid);
+    }
+    .back-link:hover { color: var(--gold-bright); }
+
+    /* Hero */
+    .hero {
+      padding: 60px 0 80px;
+      text-align: center;
+    }
+
+    .hero__badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 100px;
+      background: rgba(0,230,118,0.1);
+      border: 1px solid rgba(0,230,118,0.3);
+      color: var(--candle-green);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+    }
+
+    .hero__tagline {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 650px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    .hero__meta {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .hero__meta-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .hero__meta-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .hero__meta-value {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    /* Section titles */
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-title span {
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Features grid */
+    .features {
+      padding: 80px 0;
+    }
+
+    .features__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      transition: all 0.4s var(--ease-out-expo);
+    }
+
+    .feature-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-gold);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+
+    .feature-card__icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(0,230,204,0.08);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+    }
+
+    .feature-card__title {
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .feature-card__desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* How it works */
+    .how-it-works {
+      padding: 80px 0;
+    }
+
+    .steps {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .step {
+      flex: 1;
+      min-width: 200px;
+      max-width: 250px;
+      text-align: center;
+      padding: 32px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      position: relative;
+    }
+
+    .step__number {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--teal-dim);
+      margin-bottom: 12px;
+    }
+
+    .step__title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .step__desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Chains */
+    .chains {
+      padding: 60px 0;
+      text-align: center;
+    }
+
+    .chains__list {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .chain-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+
+    .chain-badge__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--candle-green);
+      box-shadow: 0 0 8px var(--candle-green);
+    }
+
+    /* Pricing */
+    .pricing {
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .pricing__card {
+      max-width: 480px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: 20px;
+      padding: 48px 40px;
+    }
+
+    .pricing__amount {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .pricing__label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .pricing__features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 32px;
+    }
+
+    .pricing__features li {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0,230,204,0.06);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pricing__features li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      flex-shrink: 0;
+    }
+
+    /* CTA */
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 36px;
+      background: linear-gradient(135deg, var(--teal-dim), var(--teal));
+      color: var(--bg-deep);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.4s var(--ease-out-expo);
+      text-decoration: none;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,230,204,0.3);
+      color: var(--bg-deep);
+    }
+
+    /* Tags */
+    .tags {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .tag {
+      padding: 6px 14px;
+      border-radius: 100px;
+      background: rgba(212,168,83,0.08);
+      border: 1px solid var(--border-gold);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--gold);
+      letter-spacing: 1px;
+    }
+
+    /* Footer */
+    .footer {
+      padding: 60px 0 40px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      margin-top: 60px;
+    }
+
+    .footer__disclaimer {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+
+    .footer__back {
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--teal-mid);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container { padding: 0 20px; }
+      .back-link { padding-top: 80px; }
+      .hero { padding: 40px 0 60px; }
+      .features__grid { grid-template-columns: 1fr; }
+      .steps { flex-direction: column; align-items: center; }
+      .step { max-width: 100%; }
+      .hero__meta { gap: 20px; }
+      .pricing__card { padding: 36px 24px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero__title { font-size: 2.2rem; }
+      .section-title { font-size: 1.7rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow glow--teal-top"></div>
+  <div class="glow glow--gold-right"></div>
+  <div class="glow glow--teal-bottom"></div>
+
+  <div class="container">
+    <a href="/" class="back-link">&larr; Back to Nurse2Web3</a>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero__badge">Live</div>
+      <h1 class="hero__title">HedgeAlphaOracle</h1>
+      <p class="hero__tagline">Real-time crypto &amp; stock trading signals built for AI agents and algo traders. 50+ markets, 5 simultaneous timeframes. Agents discover, authenticate, and pay autonomously via x402.</p>
+      <div class="hero__meta">
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Type</span>
+          <span class="hero__meta-value">Live API</span>
+        </div>
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Price</span>
+          <span class="hero__meta-value">From $0.01/call</span>
+        </div>
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Payment</span>
+          <span class="hero__meta-value">x402 Protocol</span>
+        </div>
+        <div class="hero__meta-item">
+          <span class="hero__meta-label">Status</span>
+          <span class="hero__meta-value">Shipped</span>
+        </div>
+      </div>
+      <div class="tags">
+        <span class="tag">x402</span>
+        <span class="tag">Base</span>
+        <span class="tag">Monad</span>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+      <h2 class="section-title"><span>Features</span></h2>
+      <div class="features__grid">
+        <div class="feature-card">
+          <div class="feature-card__icon">&#x1F4CA;</div>
+          <h3 class="feature-card__title">50+ Markets</h3>
+          <p class="feature-card__desc">Crypto and stock coverage across major exchanges. Real-time signal generation for diverse trading pairs.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">&#x23F1;</div>
+          <h3 class="feature-card__title">5 Timeframes</h3>
+          <p class="feature-card__desc">Simultaneous analysis across five timeframes for comprehensive market perspective and multi-horizon signals.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">&#x1F433;</div>
+          <h3 class="feature-card__title">Whale Detection</h3>
+          <p class="feature-card__desc">Identify large-scale trades and wallet movements before they impact price. Track smart money flow in real time.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">&#x1F680;</div>
+          <h3 class="feature-card__title">Short-Squeeze Scanner</h3>
+          <p class="feature-card__desc">Detect short-squeeze setups by monitoring short interest, borrow rates, and momentum convergence signals.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">&#x1F4B9;</div>
+          <h3 class="feature-card__title">Order Flow</h3>
+          <p class="feature-card__desc">Raw order book data and flow analysis. See buying and selling pressure before it reflects in candlesticks.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">&#x26A1;</div>
+          <h3 class="feature-card__title">Momentum Alerts</h3>
+          <p class="feature-card__desc">Automated alerts when momentum indicators align across timeframes. Catch breakouts and trend reversals early.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+      <h2 class="section-title">How It <span>Works</span></h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step__number">Step 01</div>
+          <h3 class="step__title">Discover</h3>
+          <p class="step__desc">Agent discovers the API endpoint and available signal types automatically.</p>
+        </div>
+        <div class="step">
+          <div class="step__number">Step 02</div>
+          <h3 class="step__title">Authenticate</h3>
+          <p class="step__desc">Authenticate via x402 protocol. No API key required, no subscription setup.</p>
+        </div>
+        <div class="step">
+          <div class="step__number">Step 03</div>
+          <h3 class="step__title">Pay Per Call</h3>
+          <p class="step__desc">Pay autonomously per request on Base or Monad. From $0.01 per signal.</p>
+        </div>
+        <div class="step">
+          <div class="step__number">Step 04</div>
+          <h3 class="step__title">Get Signals</h3>
+          <p class="step__desc">Receive real-time trading signals, order flow data, and momentum alerts instantly.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Supported Chains -->
+    <section class="chains">
+      <h2 class="section-title">Supported <span>Chains</span></h2>
+      <div class="chains__list">
+        <div class="chain-badge">
+          <span class="chain-badge__dot"></span>
+          Base
+        </div>
+        <div class="chain-badge">
+          <span class="chain-badge__dot"></span>
+          Monad
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing">
+      <h2 class="section-title"><span>Pricing</span></h2>
+      <div class="pricing__card">
+        <div class="pricing__amount">$0.01</div>
+        <div class="pricing__label">per call &mdash; pay only for what you use</div>
+        <ul class="pricing__features">
+          <li>No API key required</li>
+          <li>No subscription or monthly fees</li>
+          <li>Pay-per-use via x402 protocol</li>
+          <li>Autonomous agent-compatible</li>
+          <li>Instant access to all signal types</li>
+        </ul>
+        <a href="https://github.com/Nurse2Web3" class="cta-btn" target="_blank" rel="noopener">View API Documentation &rarr;</a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="footer__disclaimer">Content on Nurse2Web3 is for informational and educational purposes only. This is not financial advice.</p>
+      <a href="/" class="footer__back">&larr; Back to Nurse2Web3</a>
+    </footer>
+  </div>
+</body>
+</html>

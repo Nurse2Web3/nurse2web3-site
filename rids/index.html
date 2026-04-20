@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rational Investor Decision System (RIDS) | Nurse2Web3</title>
+    <meta name="description" content="RIDS is a free risk-first decision framework for investors and prediction-market participants. Evaluates probability, uncertainty, and timing — not price predictions. Works in ChatGPT, Claude, or Perplexity.">
+    <meta name="keywords" content="investing framework, decision system, prediction markets, risk assessment, crypto investing, rational investing, AI prompts, ChatGPT investing">
+    <meta name="author" content="Nurse2Web3">
+    <meta property="og:title" content="Rational Investor Decision System (RIDS) | Free Framework by Nurse2Web3">
+    <meta property="og:description" content="A free risk-first decision framework for investors and prediction-market participants. Evaluates probability, uncertainty, and timing — works in ChatGPT, Claude, or Perplexity.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nurse2web3.com/rids">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Rational Investor Decision System (RIDS) | Nurse2Web3">
+    <meta name="twitter:description" content="Free risk-first decision framework. Evaluates probability, uncertainty, and timing — not price predictions.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #050a12;
+            --bg-surface: #0a1020;
+            --bg-card: #0d1528;
+            --bg-card-hover: #111d35;
+            --gold: #d4a853;
+            --gold-bright: #f0cc6a;
+            --gold-dim: #8a7234;
+            --teal: #00e6cc;
+            --teal-mid: #00c8b4;
+            --teal-dim: #009e8e;
+            --teal-glow: rgba(0,230,204,0.4);
+            --text-primary: #eae6de;
+            --text-secondary: #8e99ae;
+            --text-muted: #4a5568;
+            --border: rgba(0,230,204,0.12);
+            --border-gold: rgba(212,168,83,0.2);
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'Outfit', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 18px;
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection { background: rgba(0,230,204,0.3); color: #fff; }
+
+        a { color: var(--teal); text-decoration: none; transition: all 0.3s; }
+        a:hover { color: var(--gold-bright); }
+
+        /* Noise overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.02;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-size: 256px 256px;
+        }
+
+        /* Ambient glows */
+        .glow {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(140px);
+        }
+        .glow--teal-top { width: 700px; height: 700px; top: -250px; left: -100px; background: rgba(0,230,204,0.08); }
+        .glow--gold-bottom { width: 600px; height: 600px; bottom: -200px; right: -150px; background: rgba(212,168,83,0.06); }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 32px 0 0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--teal); }
+
+        /* Hero */
+        .hero {
+            padding: 100px 0 80px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(0,230,204,0.1);
+            border: 1px solid var(--border);
+            color: var(--teal);
+            padding: 6px 18px;
+            border-radius: 24px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+            font-family: var(--font-mono);
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .hero h1 .tm {
+            font-size: 0.5em;
+            vertical-align: super;
+            color: var(--gold);
+        }
+
+        .hero .tagline {
+            font-family: var(--font-display);
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero .description {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin: 0 auto 40px;
+            line-height: 1.8;
+        }
+
+        .price-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(212,168,83,0.15), rgba(212,168,83,0.05));
+            border: 1px solid var(--border-gold);
+            color: var(--gold-bright);
+            padding: 10px 28px;
+            border-radius: 8px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            font-family: var(--font-body);
+            letter-spacing: 0.5px;
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-label {
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--teal);
+            margin-bottom: 12px;
+            font-family: var(--font-mono);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.25;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 640px;
+            margin-bottom: 48px;
+            line-height: 1.8;
+        }
+
+        .text-center { text-align: center; }
+        .text-center .section-subtitle {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .highlight { color: var(--gold); }
+        .highlight-teal { color: var(--teal); }
+
+        /* What RIDS Does */
+        .what-section {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .what-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: center;
+        }
+
+        .what-text p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .what-text p strong {
+            color: var(--text-primary);
+        }
+
+        .what-visual {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 36px;
+            text-align: center;
+        }
+
+        .what-visual .icon {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .what-visual h3 {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--gold);
+        }
+
+        .what-visual p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* Framework steps */
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .framework-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 32px 28px;
+            transition: all 0.3s var(--ease-out-expo);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .framework-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--teal), var(--gold));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .framework-card:hover {
+            border-color: rgba(0,230,204,0.3);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+            background: var(--bg-card-hover);
+        }
+
+        .framework-card:hover::before {
+            opacity: 1;
+        }
+
+        .framework-card .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0,230,204,0.1);
+            border: 1px solid var(--border);
+            color: var(--teal);
+            font-family: var(--font-mono);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .framework-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .framework-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* AI Compatible */
+        .ai-section {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ai-tools {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .ai-tool {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .ai-tool:hover {
+            border-color: var(--border-gold);
+            background: var(--bg-card-hover);
+        }
+
+        .ai-tool .tool-name {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .ai-tool .tool-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+        }
+
+        /* Who it's for */
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .audience-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 22px;
+            transition: border-color 0.3s;
+        }
+
+        .audience-item:hover {
+            border-color: rgba(0,230,204,0.3);
+        }
+
+        .audience-check {
+            color: var(--teal);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            font-weight: 700;
+        }
+
+        .audience-item span {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .cta-section h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .cta-section p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 32px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 36px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s var(--ease-out-expo);
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.3px;
+            font-family: var(--font-body);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--teal-mid), var(--teal-dim));
+            color: var(--bg-deep);
+            box-shadow: 0 4px 20px rgba(0,230,204,0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 28px rgba(0,230,204,0.4);
+            color: var(--bg-deep);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-gold);
+            margin-left: 12px;
+        }
+
+        .btn-outline:hover {
+            background: rgba(212,168,83,0.1);
+            border-color: var(--gold);
+            color: var(--gold-bright);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border);
+            padding: 48px 0 24px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .footer-brand {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .footer-links a:hover { color: var(--teal); }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .disclaimer-box {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(212,168,83,0.05);
+            border: 1px solid var(--border-gold);
+            border-radius: 12px;
+            padding: 24px 28px;
+            text-align: center;
+        }
+
+        .disclaimer-box p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.7;
+        }
+
+        .disclaimer-box strong {
+            color: var(--gold);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .what-grid {
+                grid-template-columns: 1fr;
+            }
+            .framework-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .ai-tools {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+            }
+            .audience-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 0;
+            }
+            .hero {
+                padding: 80px 0 60px;
+            }
+            .framework-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-content {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient glows -->
+    <div class="glow glow--teal-top"></div>
+    <div class="glow glow--gold-bottom"></div>
+
+    <!-- Back link -->
+    <div class="container">
+        <a href="/" class="back-link">&larr; Back to Nurse2Web3</a>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">Free Decision Framework</div>
+            <h1>Rational Investor<br>Decision System<span class="tm">&trade;</span></h1>
+            <p class="tagline">Risk-first thinking for investors and prediction-market participants.</p>
+            <p class="description">RIDS evaluates probability, uncertainty, and timing &mdash; not price predictions. Structured prompts that work inside ChatGPT, Claude, or Perplexity. Assess whether market expectations are early or overconfident, and identify what information would change the odds.</p>
+            <div class="price-badge">FREE</div>
+        </div>
+    </section>
+
+    <!-- What RIDS Does -->
+    <section class="what-section">
+        <div class="container">
+            <div class="section-label">What It Does</div>
+            <div class="section-title">Risk-first decision making, <span class="highlight">simplified</span></div>
+            <div class="what-grid">
+                <div class="what-text">
+                    <p>Most investors ask <strong>"will it go up?"</strong> &mdash; RIDS asks <strong>"what are the actual odds, what don't I know, and is the market pricing this correctly?"</strong></p>
+                    <p>It is a structured framework that forces rational evaluation before any trade, bet, or investment decision. No gut feelings. No FOMO. No hype cycles.</p>
+                    <p>Each step is designed as a <strong>prompt you can paste directly into any AI assistant</strong> to get probabilistic analysis on any asset, event, or market condition.</p>
+                    <p>Built for people who want to <strong>think clearly</strong> about risk before putting capital at stake.</p>
+                </div>
+                <div class="what-visual">
+                    <span class="icon">&#9878;</span>
+                    <h3>Decisions, Not Predictions</h3>
+                    <p>RIDS does not predict prices. It structures your thinking around probability, uncertainty, and asymmetric risk so you can make rational decisions under incomplete information.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Framework -->
+    <section>
+        <div class="container">
+            <div class="text-center">
+                <div class="section-label">Core Framework</div>
+                <div class="section-title">Five steps to a <span class="highlight-teal">rational decision</span></div>
+                <div class="section-subtitle">Each step builds on the last. Run them in order for any investment thesis, prediction market, or allocation decision.</div>
+            </div>
+            <div class="framework-grid">
+                <div class="framework-card">
+                    <div class="step-number">1</div>
+                    <h3>Assess Probability</h3>
+                    <p>What are the actual odds? Estimate the base rate. Look at historical precedent, current conditions, and known catalysts. Separate what you know from what you think you know.</p>
+                </div>
+                <div class="framework-card">
+                    <div class="step-number">2</div>
+                    <h3>Measure Uncertainty</h3>
+                    <p>What don't you know? Identify information gaps, unknown variables, and confidence levels. The wider your uncertainty band, the smaller your position should be.</p>
+                </div>
+                <div class="framework-card">
+                    <div class="step-number">3</div>
+                    <h3>Check Timing</h3>
+                    <p>Is the market early or late? Evaluate whether consensus expectations are ahead of reality or behind it. Early conviction pays; late conviction costs.</p>
+                </div>
+                <div class="framework-card">
+                    <div class="step-number">4</div>
+                    <h3>Evaluate Risk/Reward</h3>
+                    <p>What's the downside? Calculate the asymmetry. How much can you lose vs. how much can you gain? If the downside is unbounded or undefined, step back.</p>
+                </div>
+                <div class="framework-card">
+                    <div class="step-number">5</div>
+                    <h3>Decision Gate</h3>
+                    <p>Is this rational or emotional? Final checkpoint. If you cannot articulate why this is a positive expected value decision in one sentence, do not proceed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Compatible -->
+    <section class="ai-section">
+        <div class="container">
+            <div class="text-center">
+                <div class="section-label">AI-Compatible</div>
+                <div class="section-title">Paste the prompts. <span class="highlight">Get analysis.</span></div>
+                <div class="section-subtitle">RIDS is designed as structured prompts that work inside any major AI assistant. No special tools needed &mdash; just copy, paste, and think.</div>
+            </div>
+            <div class="ai-tools">
+                <div class="ai-tool">
+                    <div class="tool-name">ChatGPT</div>
+                    <div class="tool-desc">GPT-4 / GPT-4o</div>
+                </div>
+                <div class="ai-tool">
+                    <div class="tool-name">Claude</div>
+                    <div class="tool-desc">Anthropic</div>
+                </div>
+                <div class="ai-tool">
+                    <div class="tool-name">Perplexity</div>
+                    <div class="tool-desc">Search + Reasoning</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who It's For -->
+    <section>
+        <div class="container">
+            <div class="text-center">
+                <div class="section-label">Who It's For</div>
+                <div class="section-title">Built for people who <span class="highlight-teal">think before they trade</span></div>
+                <div class="section-subtitle">Whether you are allocating to crypto, evaluating a prediction market, or deciding on your next investment &mdash; RIDS brings structure to the decision.</div>
+            </div>
+            <div class="audience-grid">
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Beginner Investors</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Crypto Participants</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Prediction Market Players</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>DeFi Allocators</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Long-Term Holders</span>
+                </div>
+                <div class="audience-item">
+                    <span class="audience-check">&#10003;</span>
+                    <span>Anyone Tired of FOMO</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Think rationally. <span class="highlight">Decide clearly.</span></h2>
+            <p>RIDS is free. No email gate. No paywall. Just a framework that makes you a better decision-maker.</p>
+            <a href="https://nurse2web3.gumroad.com" target="_blank" rel="noopener" class="btn btn-primary">Get RIDS &mdash; Free</a>
+            <a href="/" class="btn btn-outline">Back to Nurse2Web3</a>
+        </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <section>
+        <div class="container">
+            <div class="disclaimer-box">
+                <p><strong>Disclaimer:</strong> This is not financial advice. RIDS is an educational decision framework only. It does not recommend specific investments, predict prices, or guarantee outcomes. Always do your own research and consult a qualified financial advisor before making investment decisions. Past performance does not indicate future results.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">Nurse2Web3</div>
+                <div class="footer-links">
+                    <a href="/">Home</a>
+                    <a href="https://tiktok.com/@nurse2web3" target="_blank" rel="noopener">TikTok</a>
+                    <a href="https://x.com/nurse2web3" target="_blank" rel="noopener">X</a>
+                    <a href="https://linkedin.com/in/nurse2web3" target="_blank" rel="noopener">LinkedIn</a>
+                    <a href="https://nurse2web3.gumroad.com" target="_blank" rel="noopener">Gumroad</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Nurse2Web3. All rights reserved. From Bedside to Blockchain.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

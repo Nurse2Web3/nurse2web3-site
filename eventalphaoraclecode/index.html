@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EventAlphaOracle — Real-Time Prediction Market API | Nurse2Web3</title>
+  <meta name="description" content="Real-time prediction market API delivering edge signals across sports and politics. Aggregates odds from 40+ sportsbooks. AI-agent ready via x402 on Base." />
+  <meta property="og:title" content="EventAlphaOracle — Real-Time Prediction Market API" />
+  <meta property="og:description" content="Edge signals across sports and politics. 40+ sportsbooks aggregated. Sub-500ms response. AI-agent ready via x402 on Base." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://nurse2web3.com/eventalphaoraclecode" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="EventAlphaOracle — Prediction Market API" />
+  <meta name="twitter:description" content="Real-time prediction market edge signals. 40+ sportsbooks. Sub-500ms. x402 on Base." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-deep: #050a12;
+      --bg-surface: #0a1020;
+      --bg-card: #0d1528;
+      --bg-card-hover: #111d35;
+      --gold: #d4a853;
+      --gold-bright: #f0cc6a;
+      --gold-dim: #8a7234;
+      --teal: #00e6cc;
+      --teal-mid: #00c8b4;
+      --teal-dim: #009e8e;
+      --teal-glow: rgba(0,230,204,0.4);
+      --candle-green: #00e676;
+      --candle-red: #ff5252;
+      --text-primary: #eae6de;
+      --text-secondary: #8e99ae;
+      --text-muted: #4a5568;
+      --border: rgba(0,230,204,0.12);
+      --border-gold: rgba(212,168,83,0.2);
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Outfit', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: rgba(0,230,204,0.3); color: #fff; }
+
+    a { color: var(--teal); text-decoration: none; transition: all 0.3s; }
+    a:hover { color: var(--gold-bright); }
+
+    /* Noise overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.02;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+    }
+
+    /* Ambient glows */
+    .glow {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      border-radius: 50%;
+      filter: blur(140px);
+    }
+    .glow--teal-top { width: 700px; height: 700px; top: -250px; left: -100px; background: rgba(0,230,204,0.08); }
+    .glow--gold-right { width: 600px; height: 600px; top: 30%; right: -200px; background: rgba(212,168,83,0.06); }
+    .glow--teal-bottom { width: 800px; height: 800px; bottom: -300px; left: 30%; background: rgba(0,230,204,0.05); }
+
+    /* Layout */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Back link */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      color: var(--teal-mid);
+      padding: 40px 0 0;
+      transition: color 0.3s, transform 0.3s;
+    }
+    .back-link:hover {
+      color: var(--teal);
+      transform: translateX(-4px);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 100px;
+      background: rgba(0,230,118,0.1);
+      border: 1px solid rgba(0,230,118,0.3);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--candle-green);
+      margin-bottom: 32px;
+    }
+    .hero__badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--candle-green);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 8vw, 6rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, var(--teal), var(--gold-bright));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 40px rgba(0,230,204,0.2));
+    }
+
+    .hero__tagline {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    .hero__meta {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .hero__meta span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hero__meta .value {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    /* Section styling */
+    section {
+      padding: 80px 0;
+    }
+
+    .section__label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 12px;
+    }
+
+    .section__title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 48px;
+      color: var(--text-primary);
+    }
+
+    /* Features grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.4s var(--ease-out-expo);
+    }
+    .feature-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-gold);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .feature-card__icon {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .feature-card__title {
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .feature-card__desc {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* How it works */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+      counter-reset: step;
+    }
+
+    .step {
+      position: relative;
+      padding: 32px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      text-align: center;
+      counter-increment: step;
+    }
+    .step::before {
+      content: counter(step);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal-dim), var(--teal));
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--bg-deep);
+    }
+
+    .step__title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .step__desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Pricing */
+    .pricing-card {
+      max-width: 500px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-gold);
+      border-radius: 20px;
+      padding: 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+    }
+
+    .pricing-card__price {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--gold-bright);
+      margin-bottom: 8px;
+    }
+
+    .pricing-card__unit {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+    }
+
+    .pricing-card__detail {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .pricing-card__tags {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      color: var(--teal-mid);
+    }
+
+    /* CTA */
+    .cta-section {
+      text-align: center;
+      padding: 80px 0;
+    }
+
+    .cta-section__title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--text-primary);
+    }
+
+    .cta-section__desc {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto 32px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 40px;
+      border-radius: 100px;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--bg-deep);
+      background: linear-gradient(135deg, var(--teal), var(--teal-mid));
+      border: none;
+      cursor: pointer;
+      transition: all 0.4s var(--ease-out-expo);
+      box-shadow: 0 4px 30px rgba(0,230,204,0.3);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(0,230,204,0.5);
+      color: var(--bg-deep);
+    }
+
+    /* Footer */
+    .footer {
+      padding: 60px 0 40px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .footer__disclaimer {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 700px;
+      margin: 0 auto 24px;
+    }
+
+    .footer__brand {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Divider */
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      margin: 0 auto 48px;
+      border-radius: 2px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container { padding: 0 20px; }
+      .hero { padding: 60px 0 40px; }
+      .hero__meta { gap: 16px; flex-direction: column; align-items: center; }
+      .features-grid { grid-template-columns: 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .pricing-card { padding: 32px 24px; }
+      section { padding: 60px 0; }
+    }
+
+    @media (max-width: 480px) {
+      .hero__title { letter-spacing: -1px; }
+      .back-link { padding-top: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient glows -->
+  <div class="glow glow--teal-top"></div>
+  <div class="glow glow--gold-right"></div>
+  <div class="glow glow--teal-bottom"></div>
+
+  <div class="container">
+    <!-- Back link -->
+    <a href="/" class="back-link">&larr; Back to Nurse2Web3</a>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero__badge">Live</div>
+      <h1 class="hero__title">EventAlphaOracle</h1>
+      <p class="hero__tagline">Real-time prediction market API delivering edge signals across sports and politics. Aggregates odds from 40+ sportsbooks. AI-agent ready via x402.</p>
+      <div class="hero__meta">
+        <span>Price: <span class="value">From $0.10/signal</span></span>
+        <span>Protocol: <span class="value">x402 on Base</span></span>
+        <span>Status: <span class="value">Shipped</span></span>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section>
+      <p class="section__label">Capabilities</p>
+      <h2 class="section__title">Built for Speed and Edge</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-card__icon">&#x1F4CA;</span>
+          <h3 class="feature-card__title">40+ Sportsbooks</h3>
+          <p class="feature-card__desc">Aggregates real-time odds across 40+ major sportsbooks into a single normalized feed. One query, full market coverage.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-card__icon">&#x26A1;</span>
+          <h3 class="feature-card__title">Sub-500ms Response</h3>
+          <p class="feature-card__desc">Latency-optimized infrastructure delivers signals in under 500 milliseconds. Built for trading speed, not casual browsing.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-card__icon">&#x1F3AF;</span>
+          <h3 class="feature-card__title">Value Detection</h3>
+          <p class="feature-card__desc">Compares public probability vs Vegas-implied lines. Identifies mispriced markets and value opportunities in real time.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-card__icon">&#x1F3C0;</span>
+          <h3 class="feature-card__title">Sports Coverage</h3>
+          <p class="feature-card__desc">NBA, NFL, Boxing, MMA and more. Full event coverage with pre-game and live market odds across major leagues.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-card__icon">&#x1F3DB;</span>
+          <h3 class="feature-card__title">Politics Coverage</h3>
+          <p class="feature-card__desc">Presidential races, Senate seats, ballot measures. Real-time political prediction market signals aggregated and scored.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-card__icon">&#x1F916;</span>
+          <h3 class="feature-card__title">AI-Agent Ready</h3>
+          <p class="feature-card__desc">Native x402 payment protocol on Base. Your AI agent queries, pays per signal, and receives structured data. No API keys needed.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section>
+      <p class="section__label">How It Works</p>
+      <h2 class="section__title">Four Steps to Edge</h2>
+      <div class="steps">
+        <div class="step">
+          <h3 class="step__title">Agent Queries</h3>
+          <p class="step__desc">Your AI agent or client sends a request with an x402 payment attached on Base.</p>
+        </div>
+        <div class="step">
+          <h3 class="step__title">Odds Aggregated</h3>
+          <p class="step__desc">Real-time odds from 40+ sportsbooks are pulled and normalized into a unified format.</p>
+        </div>
+        <div class="step">
+          <h3 class="step__title">Value Detected</h3>
+          <p class="step__desc">Public probability is compared against Vegas lines to identify mispriced opportunities.</p>
+        </div>
+        <div class="step">
+          <h3 class="step__title">Signal Returned</h3>
+          <p class="step__desc">Structured edge signal delivered in under 500ms with confidence scoring and market context.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section>
+      <p class="section__label" style="text-align:center;">Pricing</p>
+      <div class="divider"></div>
+      <div class="pricing-card">
+        <div class="pricing-card__price">$0.10</div>
+        <div class="pricing-card__unit">per signal via x402</div>
+        <p class="pricing-card__detail">Pay-per-use. No subscriptions. No API keys.</p>
+        <p class="pricing-card__detail">Payments processed on Base L2.</p>
+        <div class="pricing-card__tags">
+          <span class="tag">x402</span>
+          <span class="tag">Prediction Markets</span>
+          <span class="tag">Base</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <h2 class="cta-section__title">Get the Edge</h2>
+      <p class="cta-section__desc">Start querying real-time prediction market signals. Pay per signal. No setup required for x402-compatible agents.</p>
+      <a href="https://github.com/Nurse2Web3" class="btn" target="_blank" rel="noopener">View on GitHub &rarr;</a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p class="footer__disclaimer">EventAlphaOracle is an informational data aggregation tool only. It does not constitute financial advice, gambling advice, or any recommendation to place bets or trades. Users are solely responsible for their own decisions. Past signal accuracy does not guarantee future results. Use at your own risk and in compliance with local laws.</p>
+      <p class="footer__brand">Nurse2Web3 &copy; 2026</p>
+    </footer>
+  </div>
+</body>
+</html>
