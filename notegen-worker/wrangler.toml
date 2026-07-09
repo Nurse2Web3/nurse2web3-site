@@ -1,0 +1,12 @@
+name = "codechart-notegen"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+# Custom domain — wrangler auto-creates the DNS record + TLS cert on deploy
+# (nurse2web3.com is already on this Cloudflare account).
+[[routes]]
+pattern = "notegen-api.nurse2web3.com"
+custom_domain = true
+
+# Set the API key (not in this file — it's a secret):
+#   wrangler secret put ANTHROPIC_API_KEY

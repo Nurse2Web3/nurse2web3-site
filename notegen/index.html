@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoteGen by Nurse2Web3 | AI ER Nursing Notes &amp; Diagnosis Lookup</title>
+    <meta name="description" content="NoteGen turns an ER nurse's shorthand into a chart-ready narrative nursing note, and explains any diagnosis with nursing interventions. No patient data stored.">
+    <meta name="author" content="Nurse2Web3">
+    <meta name="robots" content="index, follow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --navy: #0a1628;
+            --navy-light: #111d33;
+            --navy-mid: #162342;
+            --teal: #1a9e96;
+            --teal-glow: #22c9b8;
+            --red: #dc3545;
+            --red-accent: #ff3b4e;
+            --gold: #d4a843;
+            --gold-light: #f0c85a;
+            --white: #f0f2f5;
+            --gray: #8e99a9;
+            --gray-light: #c5cdd8;
+            --bg-card: rgba(22, 35, 66, 0.6);
+            --border: rgba(255,255,255,0.08);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--navy); color: var(--white); line-height: 1.6; overflow-x: hidden;
+        }
+        .container { max-width: 1240px; margin: 0 auto; padding: 0 20px; }
+
+        header {
+            border-bottom: 1px solid var(--border); padding: 18px 0; position: sticky; top: 0; z-index: 20;
+            background: rgba(10,22,40,0.9); backdrop-filter: blur(10px);
+        }
+        .header-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
+        .logo span { color: var(--teal-glow); }
+        .logo small { display: block; font-size: 0.7rem; font-weight: 500; color: var(--gray); letter-spacing: 2px; text-transform: uppercase; }
+        .tag { font-size: 0.8rem; color: var(--gold); font-weight: 600; }
+
+        /* Tabs */
+        .tabs { display: flex; gap: 4px; margin: 22px 0 4px; border-bottom: 1px solid var(--border); }
+        .tab {
+            background: none; border: none; color: var(--gray); font-family: inherit; font-size: 0.95rem;
+            font-weight: 600; padding: 12px 20px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+        }
+        .tab:hover { color: var(--gray-light); }
+        .tab.active { color: var(--teal-glow); border-bottom-color: var(--teal); }
+
+        .disclaimer-banner {
+            background: rgba(220,53,69,0.12); border: 1px solid rgba(255,59,78,0.35);
+            border-radius: 10px; padding: 14px 18px; margin: 16px 0 22px; font-size: 0.9rem; color: var(--gray-light);
+        }
+        .disclaimer-banner strong { color: var(--red-accent); }
+
+        .app { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin: 0 0 40px; align-items: start; }
+        @media (max-width: 900px) { .app { grid-template-columns: 1fr; } }
+
+        .panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+        .panel-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 4px; }
+        .panel-sub { font-size: 0.85rem; color: var(--gray); margin-bottom: 20px; }
+
+        .field { margin-bottom: 16px; }
+        .field label { display: block; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; color: var(--teal-glow); font-weight: 600; margin-bottom: 6px; }
+        .field select, .field textarea, .field input {
+            width: 100%; background: var(--navy-light); border: 1px solid var(--border);
+            border-radius: 8px; padding: 12px; color: var(--white); font-family: inherit; font-size: 0.95rem;
+        }
+        .field textarea { resize: vertical; line-height: 1.5; }
+        #input { min-height: 200px; }
+        .field select:focus, .field textarea:focus, .field input:focus { outline: none; border-color: var(--teal); }
+        .hint { font-size: 0.72rem; color: var(--gray); margin-top: 5px; }
+
+        .out-area {
+            width: 100%; min-height: 340px; max-height: 62vh; background: var(--navy);
+            border: 1px solid var(--border); border-radius: 10px; padding: 16px;
+            color: var(--gray-light); font-family: inherit; font-size: 0.95rem; line-height: 1.65; resize: vertical;
+        }
+        .out-area:focus { outline: none; border-color: var(--teal); }
+        .out-placeholder { color: var(--gray); font-style: italic; }
+
+        /* rendered lookup output */
+        .rendered { min-height: 340px; background: var(--navy); border: 1px solid var(--border); border-radius: 10px; padding: 18px; color: var(--gray-light); font-size: 0.95rem; line-height: 1.7; }
+        .rendered .empty { color: var(--gray); font-style: italic; }
+        .rendered strong { color: var(--white); }
+        .rendered h4 { font-family: 'Playfair Display', serif; color: var(--teal-glow); font-size: 1.1rem; margin: 16px 0 8px; }
+        .rendered h4:first-child { margin-top: 0; }
+        .rendered ul { margin: 6px 0 6px 4px; list-style: none; }
+        .rendered li { padding-left: 18px; position: relative; margin-bottom: 6px; }
+        .rendered li::before { content: "\2022"; color: var(--teal); position: absolute; left: 2px; }
+        .rendered p { margin-bottom: 8px; }
+
+        .btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; text-decoration: none; cursor: pointer; border: none; letter-spacing: 0.3px; transition: all 0.2s ease; font-family: inherit; }
+        .btn-primary { background: var(--teal); color: #04211f; width: 100%; justify-content: center; }
+        .btn-primary:hover { background: var(--teal-glow); }
+        .btn-primary:disabled { opacity: 0.6; cursor: default; }
+        .btn-ghost { background: transparent; color: var(--gray-light); border: 1px solid var(--border); }
+        .btn-ghost:hover { border-color: var(--teal); color: var(--white); }
+        .actions { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; align-items: center; }
+        .copied { color: var(--teal-glow); font-size: 0.85rem; font-weight: 600; opacity: 0; transition: opacity 0.2s; }
+        .copied.show { opacity: 1; }
+        .err { color: var(--red-accent); font-size: 0.85rem; margin-top: 12px; min-height: 1em; }
+
+        .spinner { width: 15px; height: 15px; border: 2px solid rgba(4,33,31,0.3); border-top-color: #04211f; border-radius: 50%; animation: spin 0.7s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .full-disclaimer { background: var(--navy-light); border: 1px solid rgba(255,59,78,0.3); border-radius: 14px; padding: 28px; margin: 20px 0 40px; }
+        .full-disclaimer h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 14px; color: var(--red-accent); }
+        .full-disclaimer p { color: var(--gray-light); font-size: 0.92rem; }
+        footer { border-top: 1px solid var(--border); padding: 26px 0; text-align: center; color: var(--gray); font-size: 0.85rem; }
+        footer a { color: var(--teal-glow); text-decoration: none; }
+        [hidden] { display: none !important; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-row">
+            <div class="logo">Note<span>Gen</span><small>by Nurse2Web3</small></div>
+            <div class="tag">AI Nursing Notes &amp; Reference</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" data-view="note">&#128221; Note Writer</button>
+            <button class="tab" data-view="lookup">&#128269; Diagnosis Lookup</button>
+        </div>
+
+        <!-- ================= NOTE WRITER ================= -->
+        <div id="view-note">
+            <div class="disclaimer-banner">
+                <strong>Drafting aid only.</strong> The AI writes a note from what you type — it never invents
+                vitals, meds, or findings, and marks anything it doesn't know with <span style="color:var(--gold-light)">[brackets]</span>.
+                You must review, correct, and complete every note before charting.
+                <strong>Do not type patient names, MRN, or DOB</strong> — the note leaves those as placeholders.
+            </div>
+
+            <div class="app">
+                <div class="panel">
+                    <div class="panel-title">What happened</div>
+                    <div class="panel-sub">Type in shorthand. The AI expands it into a proper note.</div>
+
+                    <div class="field">
+                        <label for="noteType">Note type</label>
+                        <select id="noteType">
+                            <option value="narrative">Narrative nursing note</option>
+                            <option value="sbar">SBAR note</option>
+                            <option value="transfer">Transfer note</option>
+                            <option value="admit">Admission note</option>
+                            <option value="discharge">Discharge note</option>
+                            <option value="assessment">Shift assessment note</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="input">Your shorthand</label>
+                        <textarea id="input" placeholder="e.g. 66F home c/o bilat LE edema + GU concerns, A&Ox4 calm pleasant coop, ambulates w walker steady gait, VSS resps even unlabored, skin warm dry, 20g L forearm patent intact no s/s infiltration, resting comfortably NAD, POC reviewed verbalized understanding, call light in reach, awaiting provider"></textarea>
+                        <div class="hint">Abbreviations are fine. Only include what actually happened — the AI won't add anything you didn't say.</div>
+                    </div>
+
+                    <button class="btn btn-primary" id="genBtn">Generate note</button>
+                    <div class="err" id="err"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">Generated note</div>
+                    <div class="panel-sub">Editable &middot; review &amp; complete the <span style="color:var(--gold-light)">[brackets]</span> before charting</div>
+                    <textarea class="out-area" id="output" placeholder="Your note will appear here. Edit it freely before copying."></textarea>
+                    <div class="actions">
+                        <button class="btn btn-ghost" id="copyBtn">Copy note</button>
+                        <button class="btn btn-ghost" id="clearBtn">Clear</button>
+                        <span class="copied" id="copied">Copied</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= DIAGNOSIS LOOKUP ================= -->
+        <div id="view-lookup" hidden>
+            <div class="disclaimer-banner">
+                <strong>Educational reference only.</strong> This explains a condition and lists common nursing
+                interventions to support your learning and recall. It is <strong>not a care plan</strong> and not a
+                substitute for facility protocol, provider orders, or your clinical judgment. Verify everything against
+                your institution's approved guidelines.
+            </div>
+
+            <div class="app">
+                <div class="panel">
+                    <div class="panel-title">Diagnosis</div>
+                    <div class="panel-sub">Enter a condition to get an overview + nursing interventions.</div>
+
+                    <div class="field">
+                        <label for="dxInput">Diagnosis or condition</label>
+                        <input id="dxInput" type="text" placeholder="e.g. sepsis, CHF exacerbation, DKA, stroke, COPD exacerbation">
+                        <div class="hint">A condition name — no patient information needed.</div>
+                    </div>
+
+                    <button class="btn btn-primary" id="dxBtn">Look it up</button>
+                    <div class="err" id="dxErr"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-title">Overview &amp; nursing interventions</div>
+                    <div class="panel-sub">Reference &mdash; verify against your facility protocol</div>
+                    <div class="rendered" id="dxOut"><span class="empty">Results will appear here.</span></div>
+                    <div class="actions">
+                        <button class="btn btn-ghost" id="dxCopyBtn">Copy text</button>
+                        <span class="copied" id="dxCopied">Copied</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="full-disclaimer" id="disclaimer">
+            <h2>&#9888; Clinical Disclaimer</h2>
+            <p>NoteGen is a documentation and reference aid only. The Note Writer uses AI to expand your shorthand into
+            a draft note; the Diagnosis Lookup provides general clinical education. Every output is a starting point that
+            must be reviewed and validated by the nurse using their own clinical judgment. The AI is instructed never to
+            fabricate clinical facts in notes, but you are solely responsible for the accuracy of anything entered into a
+            patient's chart and for any clinical action taken. NoteGen does not replace nursing knowledge, clinical
+            judgment, physician orders, facility charting standards, care plans, or institutional policy, and must not be
+            used as the sole basis for clinical documentation or care decisions. Do not enter patient identifiers.
+            Nothing you type is stored.</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            Nurse2Web3 &middot; From Bedside to Blockchain &middot;
+            <a href="/">nurse2web3.com</a> &middot; Nothing you type is stored.
+        </div>
+    </footer>
+
+    <script>
+    // Cloudflare Worker (custom domain).
+    const API_URL = "https://notegen-api.nurse2web3.com";
+    const $ = (id) => document.getElementById(id);
+
+    // ---- tab switching ----
+    document.querySelectorAll(".tab").forEach((t) => {
+        t.addEventListener("click", () => {
+            document.querySelectorAll(".tab").forEach((x) => x.classList.remove("active"));
+            t.classList.add("active");
+            const v = t.dataset.view;
+            $("view-note").hidden = v !== "note";
+            $("view-lookup").hidden = v !== "lookup";
+        });
+    });
+
+    // ---- shared call ----
+    async function callAPI(payload) {
+        const res = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) throw new Error(data.error || ("HTTP " + res.status));
+        return data.note;
+    }
+    function busy(btn, label) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> ' + label; }
+    function unbusy(btn, label) { btn.disabled = false; btn.textContent = label; }
+
+    // ---- note writer ----
+    async function generate() {
+        const input = $("input").value.trim();
+        $("err").textContent = "";
+        if (!input) { $("err").textContent = "Type what happened first."; return; }
+        busy($("genBtn"), "Writing…");
+        $("output").value = ""; $("output").classList.add("out-placeholder");
+        try {
+            const note = await callAPI({ mode: "note", input, noteType: $("noteType").value });
+            $("output").classList.remove("out-placeholder");
+            $("output").value = note;
+        } catch (e) { $("err").textContent = "Could not generate: " + e.message; }
+        finally { unbusy($("genBtn"), "Generate note"); }
+    }
+    $("genBtn").addEventListener("click", generate);
+    $("input").addEventListener("keydown", (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") generate(); });
+    $("copyBtn").addEventListener("click", async () => {
+        if (!$("output").value.trim()) return;
+        try { await navigator.clipboard.writeText($("output").value); }
+        catch { $("output").select(); document.execCommand("copy"); }
+        flash("copied");
+    });
+    $("clearBtn").addEventListener("click", () => {
+        $("input").value = ""; $("output").value = ""; $("err").textContent = "";
+        $("output").classList.remove("out-placeholder");
+    });
+
+    // ---- diagnosis lookup ----
+    let dxRaw = "";
+    async function lookup() {
+        const dx = $("dxInput").value.trim();
+        $("dxErr").textContent = "";
+        if (!dx) { $("dxErr").textContent = "Enter a diagnosis first."; return; }
+        busy($("dxBtn"), "Looking up…");
+        $("dxOut").innerHTML = '<span class="empty">Working…</span>';
+        try {
+            dxRaw = await callAPI({ mode: "lookup", input: dx });
+            $("dxOut").innerHTML = mdLite(dxRaw);
+        } catch (e) { $("dxErr").textContent = "Could not look that up: " + e.message; $("dxOut").innerHTML = '<span class="empty">Results will appear here.</span>'; }
+        finally { unbusy($("dxBtn"), "Look it up"); }
+    }
+    $("dxBtn").addEventListener("click", lookup);
+    $("dxInput").addEventListener("keydown", (e) => { if (e.key === "Enter") lookup(); });
+    $("dxCopyBtn").addEventListener("click", async () => {
+        if (!dxRaw) return;
+        try { await navigator.clipboard.writeText(dxRaw); }
+        catch {}
+        flash("dxCopied");
+    });
+
+    function flash(id) { const c = $(id); c.classList.add("show"); setTimeout(() => c.classList.remove("show"), 1800); }
+
+    // ponytail: minimal markdown — headers (**Bold** on its own line), bullets ("- "), paragraphs. No library.
+    function mdLite(md) {
+        const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const lines = md.split("\n");
+        let html = "", inList = false;
+        const closeList = () => { if (inList) { html += "</ul>"; inList = false; } };
+        for (let raw of lines) {
+            const line = raw.trim();
+            if (!line) { closeList(); continue; }
+            // a line that is entirely a bold label -> section header
+            const hdr = line.match(/^\*\*(.+?)\*\*:?$/);
+            if (hdr) { closeList(); html += "<h4>" + esc(hdr[1]) + "</h4>"; continue; }
+            if (/^[-*•]\s+/.test(line)) {
+                if (!inList) { html += "<ul>"; inList = true; }
+                html += "<li>" + inline(esc(line.replace(/^[-*•]\s+/, ""))) + "</li>";
+                continue;
+            }
+            closeList();
+            html += "<p>" + inline(esc(line)) + "</p>";
+        }
+        closeList();
+        return html;
+        function inline(s) { return s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>"); }
+    }
+    </script>
+</body>
+</html>
